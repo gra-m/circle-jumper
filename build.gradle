@@ -1,6 +1,5 @@
 buildscript {
     
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -68,24 +67,21 @@ project(":android") {
     }
 }
 
-project(":core") {
-    apply plugin: "java-library"
+project(":libgdx_utils") {
+    apply plugin: "java"
 
+    dependencies {
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+project(":core") {
+    apply plugin: "java"
 
     dependencies {
         implementation project(":libgdx_utils")
-
     }
 
-    project(":libgdx_utils") {
-        apply plugin: "java-library"
-
-
-        dependencies {
-            api "com.badlogicgames.gdx:gdx:$gdxVersion"
-
-        }
-    }
 
 
 }

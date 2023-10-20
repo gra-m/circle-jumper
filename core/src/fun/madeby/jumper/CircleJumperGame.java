@@ -1,17 +1,9 @@
 package fun.madeby.jumper;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Logger;
-import com.badlogic.gdx.utils.ScreenUtils;
+
 
 import fun.madeby.jumper.screen.game.GameScreen;
-import fun.madeby.util.game.GameBase;
+import fun.madeby.util.game.*;
 
 public class CircleJumperGame extends GameBase {
 
