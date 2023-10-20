@@ -11,39 +11,17 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import fun.madeby.jumper.screen.game.GameScreen;
+import fun.madeby.util.game.GameBase;
 
-public class CircleJumperGame extends Game {
-	private SpriteBatch batch;
-	private AssetManager assetManager;
+public class CircleJumperGame extends GameBase {
 
-
+	/**
+	 * Called by Create() in super class (game library in libgdx_utils) so GameBase code is not
+	 * repeated with every game created.
+	 */
 	@Override
-	public void create () {
-
-		batch = new SpriteBatch();
-		assetManager = new AssetManager();
-
-		// set log levels
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-		assetManager.getLogger().setLevel(Logger.DEBUG);
-
-		// set initial screen
+	protected void postCreate() {
 		setScreen(new GameScreen(this));
 	}
 
-	@Override
-	public void dispose () {
-		// disposes current screen
-		super.dispose();
-		batch.dispose();
-		assetManager.dispose();
-	}
-
-	public AssetManager getAssetManager() {
-		return assetManager;
-	}
-
-	public SpriteBatch getBatch() {
-		return batch;
-	}
 }

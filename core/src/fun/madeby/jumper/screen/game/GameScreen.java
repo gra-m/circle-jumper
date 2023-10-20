@@ -3,17 +3,17 @@ package fun.madeby.jumper.screen.game;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 
-import fun.madeby.jumper.CircleJumperGame;
 import fun.madeby.util.GdxUtils;
+import fun.madeby.util.game.GameBase;
 
 public class GameScreen extends ScreenAdapter {
-    private final CircleJumperGame game;
+    private final GameBase game;
     private final AssetManager assetManager;
 
     private GameController controller;
     private GameRenderer renderer;
 
-    public GameScreen(CircleJumperGame circleJumperGame) {
+    public GameScreen(GameBase circleJumperGame) {
         this.game = circleJumperGame;
         this.assetManager = this.game.getAssetManager();
     }
