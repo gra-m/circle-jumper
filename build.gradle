@@ -68,7 +68,7 @@ project(":android") {
 }
 
 project(":libgdx_utils") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -76,12 +76,9 @@ project(":libgdx_utils") {
 }
 
 project(":core") {
-    apply plugin: "java"
+    apply plugin: "java-library"
 
     dependencies {
         implementation project(":libgdx_utils")
     }
-
-
-
 }

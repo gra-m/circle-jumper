@@ -1,9 +1,12 @@
+apply plugin: "java-library"
+
 sourceCompatibility = 1.7
-dependencies {
-    implementation project(path: ':libgdx_utils')
-}
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+
+dependencies {
+    implementation project(":libgdx_utils")
+}
