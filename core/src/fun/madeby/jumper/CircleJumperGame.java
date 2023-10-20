@@ -1,31 +1,49 @@
 package fun.madeby.jumper;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class CircleJumperGame extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+import fun.madeby.jumper.screen.game.GameScreen;
+
+public class CircleJumperGame extends Game {
+	private SpriteBatch batch;
+	private AssetManager assetManager;
+
+
 	@Override
 	public void create () {
+
 		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		assetManager = new AssetManager();
+
+		// set log levels
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
+		assetManager.getLogger().setLevel(Logger.DEBUG);
+
+		// set initial screen
+		setScreen(new GameScreen(this));
 	}
 
 	@Override
-	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
-	}
-	
-	@Override
 	public void dispose () {
+		// disposes current screen
+		super.dispose();
 		batch.dispose();
-		img.dispose();
+		assetManager.dispose();
+	}
+
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
+
+	public SpriteBatch getBatch() {
+		return batch;
 	}
 }
