@@ -1,9 +1,9 @@
 package fun.madeby.jumper;
 
 
-
+//imports fine
 import fun.madeby.jumper.screen.game.GameScreen;
-import fun.madeby.util.game.*;
+import fun.madeby.util.game.GameBase;
 
 public class CircleJumperGame extends GameBase {
 
