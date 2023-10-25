@@ -1,10 +1,14 @@
 apply plugin: "java-library"
 
-sourceCompatibility = 1.7
+sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
-dependencies {
-    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+project(":core") {
+    apply plugin: "java-library"
+
+    dependencies {
+        implementation project(":libgdx_utils")
+    }
 }

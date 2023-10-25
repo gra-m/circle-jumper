@@ -1,5 +1,5 @@
 apply plugin: "java-library"
-
+java.targetCompatibility = JavaVersion.VERSION_1_8
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -7,6 +7,10 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
 
-dependencies {
-    implementation project(":libgdx_utils")
+project(":core") {
+    apply plugin: "java-library"
+    dependencies {
+        implementation project(":libgdx_utils")
+    }
 }
+

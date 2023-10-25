@@ -69,7 +69,6 @@ project(":android") {
     }
 }
 
-//libgdx_utils depends on gdx
 project(":libgdx_utils") {
     apply plugin: "java-library"
 
@@ -78,14 +77,11 @@ project(":libgdx_utils") {
     }
 }
 
-//core depends on libgdx_utils and obtains gdx from this dependency. Why am I commenting the obvious?
-// because between ea4f425bacec762db581b621ed5fd6bcd3de712d and b3dcf30888ba33322ee4817dcc8649eeaa4f1c3a
-// this was added but Gradle was not recognising utils GameBase it Gradle was updated and eventually
-// saw this when the dependencies were also added explicitly to the these modules own build.gradle.
 project(":core") {
     apply plugin: "java-library"
 
     dependencies {
         implementation project(":libgdx_utils")
     }
+
 }

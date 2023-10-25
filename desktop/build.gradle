@@ -48,7 +48,7 @@ dist.dependsOn classes
 
 eclipse.project.name = appName + "-desktop"
 
-/* Added dependencies here with explicit requirement for
+// Added dependencies here with explicit requirement for
 dependencies {
     implementation project(":libgdx_utils")
-}*/
+}
