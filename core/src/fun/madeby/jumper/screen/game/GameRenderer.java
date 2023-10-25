@@ -110,7 +110,7 @@ public class GameRenderer implements Disposable {
                 monsterBounds.x, monsterBounds.y,
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
-                1, 1, monster.getAngleDegrees());
+                1, 1, GameConfig.MONSTER_START_ANGLE - monster.getAngleDegrees());
 
     }
 }
