@@ -8,10 +8,6 @@ import fun.madeby.util.entity.RectangularBase;
 
 public class Coin extends RectangularBase implements Pool.Poolable {
 
-    @Override
-    public void reset() {
-
-    }
 
     public void setAngleToDegree(float angle) {
         float radius = GameConfig.PLANET_RADIUS;
@@ -22,5 +18,10 @@ public class Coin extends RectangularBase implements Pool.Poolable {
         float newY = originY + MathUtils.sinDeg(-angle) * radius;
 
         setPosition(newX, newY);
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

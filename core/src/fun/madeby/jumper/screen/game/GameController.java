@@ -55,6 +55,11 @@ public class GameController {
     private void spawnCoins(float delta) {
         coinTimer += delta;
 
+        if (coinMaxReached()) {
+            coinTimer = 0;
+            return;
+        }
+
         if (timeToSpawnCoin()) {
             coinTimer = 0;
             Coin coin = coinPool.obtain();
@@ -64,7 +69,6 @@ public class GameController {
 
         }
     }
-
 
 
 
@@ -94,4 +98,7 @@ public class GameController {
         return MathUtils.random(betweenZeroAnd);
     }
 
+    private boolean coinMaxReached() {
+        return coins.size >= GameConfig.MAX_COINS;
+    }
 }

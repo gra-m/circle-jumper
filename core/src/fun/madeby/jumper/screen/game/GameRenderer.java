@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import fun.madeby.jumper.config.GameConfig;
+import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
 import fun.madeby.util.ViewportUtils;
@@ -111,6 +112,13 @@ public class GameRenderer implements Disposable {
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
                 1, 1, GameConfig.MONSTER_START_ANGLE - monster.getAngleDegrees());
+
+        shapeRenderer.setColor(Color.CYAN);
+        for(Coin coin : controller.getCoins()) {
+            Rectangle coinBounds = coin.getBoundsThatAreUsedForCollisionDetection();
+            shapeRenderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
+
+        }
 
     }
 }

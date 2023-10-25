@@ -31,5 +31,7 @@ public class GameConfig {
     public static final float COIN_HALF_SIZE = COIN_SIZE / 2f;
     public static final float COIN_SPAWN_TIME =  1.45f;
 
+    public static final float MAX_COINS = 2f;
+
     private GameConfig(){}
 }
