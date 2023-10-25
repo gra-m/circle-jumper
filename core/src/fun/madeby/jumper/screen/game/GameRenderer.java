@@ -104,9 +104,13 @@ public class GameRenderer implements Disposable {
         shapeRenderer.circle(planetBounds.x, planetBounds.y, planetBounds.radius, 30);
 
         shapeRenderer.setColor(Color.YELLOW);
-        Monster player = controller.getMonster();
-        Rectangle playerBounds = player.getBoundsThatAreUsedForCollisionDetection();
-        shapeRenderer.rect(playerBounds.x, playerBounds.y, playerBounds.width, playerBounds.height);
+        Monster monster = controller.getMonster();
+        Rectangle monsterBounds = monster.getBoundsThatAreUsedForCollisionDetection();
+        shapeRenderer.rect(
+                monsterBounds.x, monsterBounds.y,
+                0, 0,
+                monsterBounds.width, monsterBounds.height,
+                1, 1, monster.getAngleDegrees());
 
     }
 }

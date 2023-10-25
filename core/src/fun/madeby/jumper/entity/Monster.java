@@ -28,9 +28,9 @@ public class Monster extends RectangularBase {
         float newY = originY + MathUtils.sinDeg(-angleDegrees) * GameConfig.PLANET_RADIUS;
 
         setPosition(newX, newY);
-
-
-
     }
 
+    public float getAngleDegrees() {
+        return angleDegrees;
+    }
 }
