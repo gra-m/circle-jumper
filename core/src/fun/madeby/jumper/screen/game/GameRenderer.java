@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Planet;
+import fun.madeby.jumper.entity.Monster;
 import fun.madeby.util.ViewportUtils;
 import fun.madeby.util.debug.DebugCameraController;
 
@@ -48,9 +50,7 @@ public class GameRenderer implements Disposable {
     }
 
 
-// todo pare back dependencies to see when it actually breaks build ( belt and braces at the moment
-    // caused by other factors?
-    /** Just noticed:
+    /**
      * Given that viewports always have to be resized:
      * ScreenAdapter method propagated into GameRenderer (bespoke class). Enabling model and view
      * separation of concerns.
@@ -88,7 +88,6 @@ public class GameRenderer implements Disposable {
         ViewportUtils.drawGrid(viewport, shapeRenderer, GameConfig.CELL_SIZE);
 
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.setColor(Color.RED);
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 
         drawDebug();
@@ -98,9 +97,16 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawDebug() {
+
+        shapeRenderer.setColor(Color.RED);
         Planet planet = controller.getPlanet();
         Circle planetBounds = planet.getBoundsThatAreUsedForCollisionDetection();
         shapeRenderer.circle(planetBounds.x, planetBounds.y, planetBounds.radius, 30);
+
+        shapeRenderer.setColor(Color.YELLOW);
+        Monster player = controller.getMonster();
+        Rectangle playerBounds = player.getBoundsThatAreUsedForCollisionDetection();
+        shapeRenderer.rect(playerBounds.x, playerBounds.y, playerBounds.width, playerBounds.height);
 
     }
 }
