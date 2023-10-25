@@ -27,5 +27,9 @@ public class GameConfig {
     public static final float MONSTER_START_ACCELERATION = 4f;
 
 
+    public static final float COIN_SIZE = 1f;
+    public static final float COIN_HALF_SIZE = COIN_SIZE / 2f;
+    public static final float COIN_SPAWN_TIME =  1.45f;
+
     private GameConfig(){}
 }

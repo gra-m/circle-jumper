@@ -2,14 +2,22 @@ package fun.madeby.jumper.screen.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pools;
 
 import fun.madeby.jumper.config.GameConfig;
+import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
+    private final Array<Coin> coins = new Array<>();
+    private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
+    private float coinTimer;
 
     private Planet planet;
 
@@ -39,9 +47,26 @@ public class GameController {
             monster.makeStateJumping();
         }
         monster.updating(delta);
+        spawnCoins(delta);
 
 
     }
+
+    private void spawnCoins(float delta) {
+        coinTimer += delta;
+
+        if (timeToSpawnCoin()) {
+            coinTimer = 0;
+            Coin coin = coinPool.obtain();
+            coin.setAngleToDegree(getRandom(360));
+            coins.add(coin);
+
+
+        }
+    }
+
+
+
 
     private boolean jump() {
         // todo shrink planet and have flying monster? == get rid of monster.currentlyWalking();
@@ -55,4 +80,18 @@ public class GameController {
     public Monster getMonster() {
         return monster;
     }
+
+    public Array<Coin> getCoins() {
+        return coins;
+    }
+
+    // Janet and John's
+    private boolean timeToSpawnCoin() {
+        return coinTimer >= GameConfig.COIN_SPAWN_TIME;
+    }
+
+    private float getRandom(float betweenZeroAnd) {
+        return MathUtils.random(betweenZeroAnd);
+    }
+
 }
