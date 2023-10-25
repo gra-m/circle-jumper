@@ -33,6 +33,8 @@ public class GameController {
     }
 
     public void update(float delta) {
+        monster.update(delta);
+
 
     }
 
