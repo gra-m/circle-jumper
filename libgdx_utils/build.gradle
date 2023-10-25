@@ -5,10 +5,11 @@ sourceCompatibility = 1.8
 
 sourceSets.main.java.srcDirs = [ "src/" ]
 
+/*
 project(":core") {
     apply plugin: "java-library"
 
     dependencies {
         implementation project(":libgdx_utils")
     }
-}
+}*/

@@ -7,10 +7,10 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
 
-project(":core") {
+/*project(":core") {
     apply plugin: "java-library"
     dependencies {
         implementation project(":libgdx_utils")
     }
-}
+}*/
 

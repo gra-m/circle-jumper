@@ -70,6 +70,7 @@ project(":android") {
 }
 
 project(":libgdx_utils") {
+    //apply plugin: "java"
     apply plugin: "java-library"
 
     dependencies {
@@ -78,7 +79,8 @@ project(":libgdx_utils") {
 }
 
 project(":core") {
-    apply plugin: "java-library"
+    apply plugin: "java"
+    //apply plugin: "java-library"
 
     dependencies {
         implementation project(":libgdx_utils")

@@ -48,7 +48,7 @@ dist.dependsOn classes
 
 eclipse.project.name = appName + "-desktop"
 
-// Added dependencies here with explicit requirement for
+/*// not required since target 1.8 instead of 1.7
 dependencies {
     implementation project(":libgdx_utils")
-}
+}*/
