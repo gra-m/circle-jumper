@@ -48,7 +48,8 @@ public class GameRenderer implements Disposable {
     }
 
 
-
+// todo pare back dependencies to see when it actually breaks build ( belt and braces at the moment
+    // caused by other factors?
     /** Just noticed:
      * Given that viewports always have to be resized:
      * ScreenAdapter method propagated into GameRenderer (bespoke class). Enabling model and view
