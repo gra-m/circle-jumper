@@ -1,5 +1,7 @@
 package fun.madeby.jumper.screen.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Logger;
 
 import fun.madeby.jumper.config.GameConfig;
@@ -33,9 +35,17 @@ public class GameController {
     }
 
     public void update(float delta) {
-        monster.update(delta);
+        if (jump()) {
+            monster.makeStateJumping();
+        }
+        monster.updating(delta);
 
 
+    }
+
+    private boolean jump() {
+        // todo shrink planet and have flying monster? == get rid of monster.currentlyWalking();
+        return Gdx.input.isKeyPressed(Input.Keys.SPACE) && monster.currentlyWalking();
     }
 
     public Planet getPlanet(){
