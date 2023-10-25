@@ -16,6 +16,7 @@ public class GameController {
     private void init() {
         planet = new Planet();
         planet.setPosition(GameConfig.WORLD_CENTER_X,GameConfig.WORLD_CENTER_Y);
+        planet.setSize(GameConfig.PLANET_RADIUS);
 
     }
 

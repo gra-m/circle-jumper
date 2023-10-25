@@ -1,14 +1,17 @@
 package fun.madeby.jumper.screen.game;
 
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import fun.madeby.jumper.config.GameConfig;
+import fun.madeby.jumper.entity.Planet;
 import fun.madeby.util.ViewportUtils;
 import fun.madeby.util.debug.DebugCameraController;
 
@@ -39,8 +42,7 @@ public class GameRenderer implements Disposable {
         debugCameraController.handleDebugInput(delta);
         debugCameraController.applyInternalPositionAndZoomToThisCamera(camera);
 
-
-        testDebugControllerRendering();
+        //testDebugControllerRendering();
 
         renderDebug();
     }
@@ -68,6 +70,8 @@ public class GameRenderer implements Disposable {
 
     /**
      * Test method -> renders 6 WU diameter circle in 30 segments
+     * left here as test method for debug controller rendering Before
+     * calling drawDebug() so this should be disappearing soon right?
      */
     private void testDebugControllerRendering() {
         viewport.apply();
@@ -81,6 +85,21 @@ public class GameRenderer implements Disposable {
     private void renderDebug() {
         viewport.apply();
         ViewportUtils.drawGrid(viewport, shapeRenderer, GameConfig.CELL_SIZE);
+
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+
+        drawDebug();
+
+        shapeRenderer.end();
+
+    }
+
+    private void drawDebug() {
+        Planet planet = controller.getPlanet();
+        Circle planetBounds = planet.getBoundsThatAreUsedForCollisionDetection();
+        shapeRenderer.circle(planetBounds.x, planetBounds.y, planetBounds.radius, 30);
 
     }
 }

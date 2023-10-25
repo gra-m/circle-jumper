@@ -13,5 +13,9 @@ public class GameConfig {
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT/2f;
     public static final int CELL_SIZE = 1;
 
+    public static final float PLANET_DIAMETER = 9f;
+    public static final float PLANET_RADIUS = PLANET_DIAMETER / 2;
+
+
     private GameConfig(){}
 }
