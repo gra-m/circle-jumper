@@ -111,12 +111,17 @@ public class GameRenderer implements Disposable {
                 monsterBounds.x, monsterBounds.y,
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
-                1, 1, GameConfig.MONSTER_START_ANGLE - monster.getAngleDegrees());
+                1, 1, GameConfig.START_ANGLE - monster.getAngleDegrees());
 
         shapeRenderer.setColor(Color.CYAN);
         for(Coin coin : controller.getCoins()) {
             Rectangle coinBounds = coin.getBoundsThatAreUsedForCollisionDetection();
-            shapeRenderer.rect(coinBounds.x, coinBounds.y, coinBounds.width, coinBounds.height);
+            shapeRenderer.rect(
+                    coinBounds.x, coinBounds.y,
+                    0, 0,
+                    coinBounds.width, coinBounds.height,
+                    1, 1,
+                    GameConfig.START_ANGLE - coin.getDegreeOfAngle());
 
         }
 
