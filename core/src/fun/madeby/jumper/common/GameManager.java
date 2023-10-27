@@ -92,5 +92,7 @@ public class GameManager {
         }
 
     private GameManager(){}
-
+    // todo add lives for fun later
+   /* public void decrementLives() {
+    }*/
 }

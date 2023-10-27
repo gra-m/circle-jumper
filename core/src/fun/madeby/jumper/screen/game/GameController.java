@@ -2,12 +2,16 @@ package fun.madeby.jumper.screen.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
+import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
@@ -22,6 +26,9 @@ public class GameController {
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float coinTimer;
     private float obstacleTimer;
+    private int testLives = 5;
+    private int testLivesLost;
+
 
     private Planet planet;
 
@@ -53,8 +60,7 @@ public class GameController {
         monster.updating(delta);
         spawnCoins(delta);
         spawnObstacles(delta);
-
-
+        collisionDetection();
     }
 
     private void spawnObstacles(float delta) {
@@ -134,5 +140,69 @@ public class GameController {
 
     private boolean obstacleMaxReached() {
         return obstacles.size >= GameConfig.MAX_OBSTACLES;
+    }
+
+    private void collisionDetection() {
+
+        for (int i = 0; i < coins.size; i++) {
+            if(collided(coins.get(i).getBoundsThatAreUsedForCollisionDetection()))
+                coinScore(i);
+        }
+
+        for (int i = 0; i < obstacles.size; i++) {
+            if(collided(obstacles.get(i).getBoundsThatAreUsedForCollisionDetection()))
+                lifeLost(i);
+        }
+
+        for (int i = 0; i < obstacles.size; i++) {
+            if(collided(obstacles.get(i).getJumpSuccessSensor()))
+                jumpSuccessScore(i);
+        }
+    }
+
+
+    private void coinScore(int coinCollected) {
+        Coin collected = coins.removeIndex(coinCollected);
+        coinPool.free(collected);
+        GameManager.getInstance().incrementScore(GameConfig.COIN_SCORE);
+    }
+
+    private void lifeLost(int bashedObstacle) {
+        Obstacle bashed = obstacles.removeIndex(bashedObstacle);
+        obstaclePool.free(bashed);
+        decrementLives();
+    }
+
+    /**
+     * Poss implement here or in GameManager but for now calling reset after test-lives are lost
+     */
+    private void decrementLives() {
+        if (testLivesLost++ >= testLives)
+        reset();
+
+    }
+
+    private void reset() {
+        coinPool.freeAll(coins);
+        coinPool.clear();
+
+        obstaclePool.freeAll(obstacles);
+        obstacles.clear();
+
+        GameManager.getInstance().reset();
+
+        monster.reset();
+        monster.setPosition(monsterStartX, monsterStartY);
+
+    }
+
+    private void jumpSuccessScore(int jumpedObstacle) {
+        Obstacle jumped = obstacles.removeIndex(jumpedObstacle);
+        obstaclePool.free(jumped);
+        GameManager.getInstance().incrementScore(GameConfig.JUMP_SCORE);
+    }
+
+    private boolean collided(Rectangle itemBounds) {
+        return Intersector.overlaps(monster.getBoundsThatAreUsedForCollisionDetection(), itemBounds);
     }
 }

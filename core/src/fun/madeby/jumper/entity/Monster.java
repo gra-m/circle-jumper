@@ -40,6 +40,10 @@ public class Monster extends RectangularBase {
         setPosition(newX, newY);
     }
 
+    public void reset() {
+        angleDegrees = GameConfig.START_ANGLE;
+    }
+
     private void adjustForState(float delta) {
         if (monstersState.isJumping()) {
             speed += acceleration * delta;
@@ -92,5 +96,6 @@ public class Monster extends RectangularBase {
     public boolean currentlyFalling() {
         return monstersState.isFalling();
     }
+
 
 }
