@@ -2,14 +2,14 @@ package fun.madeby.jumper.config;
 
 public class GameConfig {
 
-    public static final float WIDTH = 480f; // pixels
+    public static final float WIDTH = 600f; // pixels
     public static final float HEIGHT = 800f; // pixels
 
 
     // The rest are in WorldUnits, including hud which mimics Gen Width and Height in its granularity
     public static final float WORLD_WIDTH = 16f;
     public static final float WORLD_HEIGHT = 24f;
-    public static final float HUD_WIDTH = 480f;
+    public static final float HUD_WIDTH = 600f;
     public static final float HUD_HEIGHT = 800f;
 
     public static final float WORLD_CENTER_X = WORLD_WIDTH/2f;

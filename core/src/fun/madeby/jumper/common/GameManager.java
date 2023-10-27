@@ -62,6 +62,21 @@ public class GameManager {
 
     }
 
+    public int getDisplayedHighScore() {
+        return displayedHighScore;
+    }
+
+    public int getDisplayedScore() {
+        return this.score;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public int getScore() {
+        return score;
+    }
 
     // Singleton Thread safe low overhead logic:
         public static GameManager getInstance() {
@@ -77,4 +92,5 @@ public class GameManager {
         }
 
     private GameManager(){}
+
 }
