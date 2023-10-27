@@ -3,6 +3,7 @@ package fun.madeby.jumper;
 
 //imports fine
 import fun.madeby.jumper.screen.game.GameScreen;
+import fun.madeby.jumper.screen.loading.LoadingScreen;
 import fun.madeby.util.game.GameBase;
 
 public class CircleJumperGame extends GameBase {
@@ -13,7 +14,7 @@ public class CircleJumperGame extends GameBase {
 	 */
 	@Override
 	protected void postCreate() {
-		setScreen(new GameScreen(this));
+		setScreen(new LoadingScreen(this));
 	}
 
 }

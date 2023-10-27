@@ -6,10 +6,11 @@ public class GameConfig {
     public static final float HEIGHT = 800f; // pixels
 
 
-    // The rest are in WorldUnits
+    // The rest are in WorldUnits, including hud which mimics Gen Width and Height in its granularity
     public static final float WORLD_WIDTH = 16f;
     public static final float WORLD_HEIGHT = 24f;
-
+    public static final float HUD_WIDTH = 480f;
+    public static final float HUD_HEIGHT = 800f;
 
     public static final float WORLD_CENTER_X = WORLD_WIDTH/2f;
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT/2f;
