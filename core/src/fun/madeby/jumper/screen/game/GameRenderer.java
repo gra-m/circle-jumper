@@ -80,6 +80,25 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawHUD() {
+        drawScores();
+        
+        if (controller.getWaitBetweenGames() >= 0)
+            drawWaitTimer();
+        
+    }
+
+    private void drawWaitTimer() {
+        int timeToDisplay = (int) controller.getWaitBetweenGames();
+        String timeDisplayString = timeToDisplay == 0 ? "GO!" : "" + timeToDisplay;
+
+        layout.setText(hudFont, timeDisplayString);
+        hudFont.draw(spriteBatch, layout,
+                (GameConfig.HUD_WIDTH - layout.width) / 2,
+                (GameConfig.HUD_HEIGHT + layout.height) / 2);
+
+    }
+
+    private void drawScores() {
         String scoreString = "SCORE: " + GameManager.getInstance().getDisplayedScore();
         String highScoreString = "HIGH-SCORE: " + GameManager.getInstance().getDisplayedHighScore();
 

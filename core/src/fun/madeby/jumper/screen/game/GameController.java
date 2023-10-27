@@ -26,6 +26,7 @@ public class GameController {
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float coinTimer;
     private float obstacleTimer;
+    private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
     private int testLives = 5;
     private int testLivesLost;
 
@@ -54,6 +55,13 @@ public class GameController {
     }
 
     public void update(float delta) {
+        if (waitBetweenGames > 0) {
+            waitBetweenGames -= delta;
+            return;
+        }
+
+        GameManager.getInstance().updateDisplayScores(delta);
+
         if (jump()) {
             monster.makeStateJumping();
         }
@@ -125,6 +133,10 @@ public class GameController {
         return obstacles;
     }
 
+    public float getWaitBetweenGames() {
+        return waitBetweenGames;
+    }
+
     // Janet and John's
     private boolean timeToSpawnCoin() {
         return coinTimer >= GameConfig.COIN_SPAWN_TIME;
@@ -173,13 +185,12 @@ public class GameController {
         decrementLives();
     }
 
-    /**
+    /** todo
      * Poss implement here or in GameManager but for now calling reset after test-lives are lost
      */
     private void decrementLives() {
         if (testLivesLost++ >= testLives)
-        reset();
-
+            reset();
     }
 
     private void reset() {
@@ -193,6 +204,8 @@ public class GameController {
 
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
+
+        waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
 
     }
 

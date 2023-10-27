@@ -43,5 +43,7 @@ public class GameConfig {
     public static final int COIN_SCORE = 20;
     public static final int JUMP_SCORE = 10;
 
+    public static final float PAUSE_BEFORE_RESTART = 3;
+
     private GameConfig(){}
 }
