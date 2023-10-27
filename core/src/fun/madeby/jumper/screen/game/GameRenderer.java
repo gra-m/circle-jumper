@@ -1,7 +1,6 @@
 package fun.madeby.jumper.screen.game;
 
 
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,7 +14,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.org.apache.bcel.internal.generic.ANEWARRAY;
 
 import fun.madeby.jumper.assetinfo.AssetDescriptors;
 import fun.madeby.jumper.common.GameManager;
@@ -69,7 +67,6 @@ public class GameRenderer implements Disposable {
         //testDebugControllerRendering();
 
         renderDebug();
-
         renderHud();
     }
 
@@ -78,8 +75,6 @@ public class GameRenderer implements Disposable {
         spriteBatch.setProjectionMatrix(hudViewport.getCamera().combined);
 
         spriteBatch.begin();
-
-
         drawHUD();
         spriteBatch.end();
     }
@@ -176,15 +171,25 @@ public class GameRenderer implements Disposable {
 
         }
 
-        shapeRenderer.setColor(Color.MAGENTA);
         for(Obstacle obstacle : controller.getObstacles()) {
             Rectangle obstacleBounds = obstacle.getBoundsThatAreUsedForCollisionDetection();
+            Rectangle invisibleSensorBounds = obstacle.getJumpSuccessSensor();
+
+            shapeRenderer.setColor(Color.MAGENTA);
             shapeRenderer.rect(
                     obstacleBounds.x, obstacleBounds.y,
                     0, 0,
                     obstacleBounds.width, obstacleBounds.height,
                     1, 1,
                     GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
+
+            shapeRenderer.setColor(Color.WHITE);
+            shapeRenderer.rect(
+                    invisibleSensorBounds.x, invisibleSensorBounds.y,
+                    0, 0,
+                    invisibleSensorBounds.width, invisibleSensorBounds.height,
+                    1, 1,
+                    GameConfig.START_ANGLE - obstacle.getSensorDegreeOfAngle());
         }
 
     }
