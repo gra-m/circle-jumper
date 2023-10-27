@@ -21,6 +21,7 @@ import fun.madeby.jumper.assetinfo.AssetDescriptors;
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
+import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
 import fun.madeby.util.ViewportUtils;
@@ -84,18 +85,17 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawHUD() {
-        float padding = 20f;
         String scoreString = "SCORE: " + GameManager.getInstance().getDisplayedScore();
         String highScoreString = "HIGH-SCORE: " + GameManager.getInstance().getDisplayedHighScore();
 
-        float allHudTextY = hudViewport.getWorldHeight() - padding;
-        float highScoreX = padding;
+        float allHudTextY = hudViewport.getWorldHeight() - GameConfig.HUD_SCORE_PADDING;
+        float highScoreX = GameConfig.HUD_SCORE_PADDING;
 
         layout.setText(hudFont, highScoreString);
         hudFont.draw(spriteBatch, layout, highScoreX, allHudTextY);
 
         layout.setText(hudFont, scoreString);
-        float scoreX = hudViewport.getWorldWidth() - (layout.width + padding);
+        float scoreX = hudViewport.getWorldWidth() - (layout.width + GameConfig.HUD_SCORE_PADDING);
 
         hudFont.draw(spriteBatch, layout, scoreX, allHudTextY);
     }
@@ -174,6 +174,17 @@ public class GameRenderer implements Disposable {
                     1, 1,
                     GameConfig.START_ANGLE - coin.getDegreeOfAngle());
 
+        }
+
+        shapeRenderer.setColor(Color.MAGENTA);
+        for(Obstacle obstacle : controller.getObstacles()) {
+            Rectangle obstacleBounds = obstacle.getBoundsThatAreUsedForCollisionDetection();
+            shapeRenderer.rect(
+                    obstacleBounds.x, obstacleBounds.y,
+                    0, 0,
+                    obstacleBounds.width, obstacleBounds.height,
+                    1, 1,
+                    GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
         }
 
     }

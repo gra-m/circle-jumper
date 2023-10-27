@@ -10,14 +10,18 @@ import com.badlogic.gdx.utils.Pools;
 
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
+import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
     private final Array<Coin> coins = new Array<>();
+    private final Array<Obstacle> obstacles = new Array<>();
+    private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 14);
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float coinTimer;
+    private float obstacleTimer;
 
     private Planet planet;
 
@@ -48,9 +52,31 @@ public class GameController {
         }
         monster.updating(delta);
         spawnCoins(delta);
+        spawnObstacles(delta);
 
 
     }
+
+    private void spawnObstacles(float delta) {
+        obstacleTimer += delta;
+
+        if(obstacleMaxReached()) {
+            obstacleTimer = 0;
+            return;
+        }
+
+        if (timeToSpawnObstacle()) {
+           obstacleTimer = 0;
+           Obstacle obstacle = obstaclePool.obtain();
+           obstacle.setAngleToDegree(getRandom(360));
+           obstacles.add(obstacle);
+        }
+    }
+
+    private boolean timeToSpawnObstacle() {
+        return obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME;
+    }
+
 
     private void spawnCoins(float delta) {
         coinTimer += delta;
@@ -89,6 +115,10 @@ public class GameController {
         return coins;
     }
 
+    public Array<Obstacle> getObstacles() {
+        return obstacles;
+    }
+
     // Janet and John's
     private boolean timeToSpawnCoin() {
         return coinTimer >= GameConfig.COIN_SPAWN_TIME;
@@ -100,5 +130,9 @@ public class GameController {
 
     private boolean coinMaxReached() {
         return coins.size >= GameConfig.MAX_COINS;
+    }
+
+    private boolean obstacleMaxReached() {
+        return obstacles.size >= GameConfig.MAX_OBSTACLES;
     }
 }

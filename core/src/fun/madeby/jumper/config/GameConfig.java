@@ -11,6 +11,7 @@ public class GameConfig {
     public static final float WORLD_HEIGHT = 24f;
     public static final float HUD_WIDTH = 600f;
     public static final float HUD_HEIGHT = 800f;
+    public static final float HUD_SCORE_PADDING = 20f;
 
     public static final float WORLD_CENTER_X = WORLD_WIDTH/2f;
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT/2f;
@@ -27,11 +28,14 @@ public class GameConfig {
     public static final float MONSTER_MAX_SPEED = 2f;
     public static final float MONSTER_START_ACCELERATION = 4f;
 
+    public static final float OBSTACLE_SIZE = 1f;
+    public static final float OBSTACLE_HALF_SIZE = MONSTER_SIZE / 2f;
+    public static final float OBSTACLE_SPAWN_TIME =  0.75f;
+    public static final float MAX_OBSTACLES = 3f;
 
     public static final float COIN_SIZE = 1f;
     public static final float COIN_HALF_SIZE = COIN_SIZE / 2f;
-    public static final float COIN_SPAWN_TIME =  1.45f;
-
+    public static final float COIN_SPAWN_TIME =  1.25f;
     public static final float MAX_COINS = 2f;
 
     private GameConfig(){}
