@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
@@ -17,6 +16,8 @@ import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
+import fun.madeby.util.entity.EntityBase;
+import fun.madeby.util.entity.RectangularBase;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
@@ -67,7 +68,7 @@ public class GameController {
         }
         monster.updating(delta);
         spawnCoins(delta);
-        spawnObstacles(delta);
+        //spawnObstacles(delta);
         collisionDetection();
     }
 
@@ -95,21 +96,79 @@ public class GameController {
     private void spawnCoins(float delta) {
         coinTimer += delta;
 
-        if (coinMaxReached()) {
-            coinTimer = 0;
+        if (!timeToSpawnCoin()) {
             return;
         }
 
-        if (timeToSpawnCoin()) {
-            coinTimer = 0;
-            Coin coin = coinPool.obtain();
-            coin.setAngleToDegree(getRandom(360));
-            coins.add(coin);
+        coinTimer=0;
+        addZeroToTwoCoins();
 
+        }
 
+    private void addZeroToTwoCoins() {
+        int coinsToSpawn = (int) getRandom(3);
+
+        for (int i = 0; i <= coinsToSpawn;) {
+            float plannedSpawnAngle = MathUtils.random(360);
+
+            if (noPlayerOrExistingCollectableAt(plannedSpawnAngle)) {
+                Coin coin = coinPool.obtain();
+                coin.setAngleToDegree(plannedSpawnAngle);
+                if(butThereIsAnObstacle(plannedSpawnAngle)) {
+                    coin.spawnBodyHeightAbovePlanet();
+                }
+                coins.add(coin);
+                i++;
+            }
         }
     }
 
+    private boolean butThereIsAnObstacle(float plannedSpawnAngle) {
+        Array<RectangularBase> arrayOfObstacles = new Array<RectangularBase>(obstacles);
+        return !checkArrayOfGameObjectsAgainst(plannedSpawnAngle, arrayOfObstacles,
+                GameConfig.MIN_SPAWN_DISTANCE_ANGLE );
+
+    }
+
+    private boolean noPlayerOrExistingCollectableAt(float plannedSpawnAngle) {
+        boolean noPlayerInWay = checkAngle(plannedSpawnAngle,
+                monster.getCircumferencePositionInDegrees(),
+                GameConfig.MIN_SPAWN_DISTANCE_ANGLE);
+
+        Array<RectangularBase> arrayOfCoins = new Array<RectangularBase>(coins);
+        boolean noCoinInWay = checkArrayOfGameObjectsAgainst(plannedSpawnAngle, arrayOfCoins,
+                GameConfig.MIN_SPAWN_DISTANCE_ANGLE);
+
+
+        monster.getCircumferencePositionInDegrees();
+
+
+        return (noPlayerInWay && noCoinInWay);
+
+    }
+
+    private boolean checkArrayOfGameObjectsAgainst(float plannedSpawnAngle, Array<RectangularBase> array,
+                                                   float tolerance) {
+        // Only coins presently
+        Boolean nothingInWay = true;
+        for (RectangularBase item : array) {
+            boolean currentNotInWay;
+            currentNotInWay = checkAngle(plannedSpawnAngle,
+                    item.getCircumferencePositionInDegrees(),
+                    tolerance);
+
+            if (!currentNotInWay) {
+              nothingInWay = false;
+                break;
+            }
+        }
+        return nothingInWay;
+    }
+
+    private boolean checkAngle(float angle1, float angle2, float tolerance ) {
+        float difference = Math.abs(Math.abs(angle1) - Math.abs(angle2));
+        return difference > tolerance;
+    }
 
 
     private boolean jump() {
@@ -139,7 +198,7 @@ public class GameController {
 
     // Janet and John's
     private boolean timeToSpawnCoin() {
-        return coinTimer >= GameConfig.COIN_SPAWN_TIME;
+        return coinTimer >= GameConfig.COIN_SPAWN_TIME && coins.size == 0;
     }
 
     private float getRandom(float betweenZeroAnd) {

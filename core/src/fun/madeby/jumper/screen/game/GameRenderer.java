@@ -176,7 +176,7 @@ public class GameRenderer implements Disposable {
                 monsterBounds.x, monsterBounds.y,
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
-                1, 1, GameConfig.START_ANGLE - monster.getAngleDegrees());
+                1, 1, GameConfig.START_ANGLE - monster.getCircumferencePositionInDegrees());
 
         shapeRenderer.setColor(Color.CYAN);
         for(Coin coin : controller.getCoins()) {
@@ -186,7 +186,7 @@ public class GameRenderer implements Disposable {
                     0, 0,
                     coinBounds.width, coinBounds.height,
                     1, 1,
-                    GameConfig.START_ANGLE - coin.getDegreeOfAngle());
+                    GameConfig.START_ANGLE - coin.getCircumferencePositionInDegrees());
 
         }
 

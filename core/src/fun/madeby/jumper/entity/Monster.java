@@ -6,7 +6,7 @@ import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.util.entity.RectangularBase;
 
 public class Monster extends RectangularBase {
-    private float angleDegrees = GameConfig.START_ANGLE;
+    private float circumferencePositionInDegrees = GameConfig.START_ANGLE;
     private float walkingAngularSpeed = GameConfig.MONSTER_START_ANGULAR_SPEED;
     private float speed = 0;
     private float acceleration = GameConfig.MONSTER_START_ACCELERATION;
@@ -19,13 +19,10 @@ public class Monster extends RectangularBase {
     public void updating(float delta) {
 
         adjustForState(delta);
-
-
-
         // degrees traversed in time since last frame:
-        angleDegrees += walkingAngularSpeed * delta;
+        circumferencePositionInDegrees += walkingAngularSpeed * delta;
         // limit degrees to those in circle
-        angleDegrees = angleDegrees % 360;
+        circumferencePositionInDegrees = circumferencePositionInDegrees % 360;
 
         // radius of circle being traversed by monster
         // center of circle being traversed by monster
@@ -34,14 +31,14 @@ public class Monster extends RectangularBase {
         float originY = GameConfig.WORLD_CENTER_Y;
 
         // - angleDegrees == clockwise movement + angleDegrees = anti-clockwise
-        float newX = originX + MathUtils.cosDeg(-angleDegrees) * radiusAdjustedWithSpeed;
-        float newY = originY + MathUtils.sinDeg(-angleDegrees) * radiusAdjustedWithSpeed;
+        float newX = originX + MathUtils.cosDeg(-circumferencePositionInDegrees) * radiusAdjustedWithSpeed;
+        float newY = originY + MathUtils.sinDeg(-circumferencePositionInDegrees) * radiusAdjustedWithSpeed;
 
         setPosition(newX, newY);
     }
 
     public void reset() {
-        angleDegrees = GameConfig.START_ANGLE;
+        circumferencePositionInDegrees = GameConfig.START_ANGLE;
     }
 
     private void adjustForState(float delta) {
@@ -69,8 +66,8 @@ public class Monster extends RectangularBase {
         return speed >= GameConfig.MONSTER_MAX_SPEED;
     }
 
-    public float getAngleDegrees() {
-        return angleDegrees;
+    public float getCircumferencePositionInDegrees() {
+        return super.circumferencePositionInDegrees;
     }
 
     public void makeStateWalking() {

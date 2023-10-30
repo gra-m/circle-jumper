@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public abstract class RectangularBase extends EntityBase{
 
+    protected float circumferencePositionInDegrees;
     protected float height = 1;
 
     // any change to size or position of an entity with a texture needs the bounds to follow
@@ -11,6 +12,10 @@ public abstract class RectangularBase extends EntityBase{
 
     public RectangularBase(){
         boundsForCollisionDetection = new Rectangle(x, y, widthOrRadius, height);
+    }
+
+    public float getCircumferencePositionInDegrees() {
+        return circumferencePositionInDegrees;
     }
 
     protected void updateBoundsForCollisionDetection() {
