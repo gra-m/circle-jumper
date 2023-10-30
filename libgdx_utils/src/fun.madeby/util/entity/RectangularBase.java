@@ -4,7 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 public abstract class RectangularBase extends EntityBase{
 
-    protected float circumferencePositionInDegrees;
+    private static final  float REQUIRED_TO_SET_MONSTER_TRIGONOMETRY = -90f;
+    protected float circumferencePositionInDegrees = REQUIRED_TO_SET_MONSTER_TRIGONOMETRY;
     protected float height = 1;
 
     // any change to size or position of an entity with a texture needs the bounds to follow

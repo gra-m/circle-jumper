@@ -6,7 +6,6 @@ import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.util.entity.RectangularBase;
 
 public class Monster extends RectangularBase {
-    private float circumferencePositionInDegrees = GameConfig.START_ANGLE;
     private float walkingAngularSpeed = GameConfig.MONSTER_START_ANGULAR_SPEED;
     private float speed = 0;
     private float acceleration = GameConfig.MONSTER_START_ACCELERATION;

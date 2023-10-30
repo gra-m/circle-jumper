@@ -99,10 +99,7 @@ public class GameController {
         if (!timeToSpawnCoin()) {
             return;
         }
-
-        coinTimer=0;
         addZeroToTwoCoins();
-
         }
 
     private void addZeroToTwoCoins() {
@@ -218,6 +215,7 @@ public class GameController {
         for (int i = 0; i < coins.size; i++) {
             if(collided(coins.get(i).getBoundsThatAreUsedForCollisionDetection()))
                 coinScore(i);
+            coinTimer = 0f;
         }
 
         for (int i = 0; i < obstacles.size; i++) {
