@@ -11,12 +11,12 @@ public class BooleanTIntegerVHolder implements GenericHolder<Boolean, Integer> {
 
     @Override
     public Boolean getT() {
-        return null;
+        return truthValue;
     }
 
 
     @Override
     public Integer getV() {
-        return null;
+        return numberValue;
     }
 }

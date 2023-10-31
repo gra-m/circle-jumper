@@ -86,31 +86,43 @@ public class GameController {
         }
 
             LOG.debug("okToSpawnObstacle == true");
-            obstacleTimer = 0;
             addZeroToMaxObstacles(maxToSpawn);
+            obstacleTimer = 0;
     }
 
     private void addZeroToMaxObstacles(int maxSpawnAmount) {
         int obstaclesToSpawn = (int) getRandom(0, maxSpawnAmount + 1);
         Array<Obstacle>  newObstacles = new Array<>(obstaclesToSpawn);
+        int attempts = 1;
 
         LOG.debug("addZeroToMaxObstacles trying to spawn " + obstaclesToSpawn +" obstacles");
 
-        for (int i = 0; i <= obstaclesToSpawn;) {
+        // fixme obstacles are being called so quikly afterward the previously spawned is blocking the next. Attempts just stops crash
+        // spawns only one.
+        for (int i = 1; i <= obstaclesToSpawn;) {
             float plannedSpawnAngle = monster.getCircumferencePositionInDegrees() - i * GameConfig.MIN_SEPARATION_OBJECTS - MathUtils.random(60, 80);
-            LOG.debug("obstacle " + i + " is trying to get spawned @ " + plannedSpawnAngle);
-            if (noNonPlayerGameObjectAlreadyAt(plannedSpawnAngle)) {
-                Obstacle obstacle = obstaclePool.obtain();
-                obstacle.setAngleToDegree(plannedSpawnAngle);
-                newObstacles.add(obstacle);
-                i++;
+            if (plannedSpawnAngle < 0)
+                plannedSpawnAngle = 360 + plannedSpawnAngle;
+            if (attempts % 3 == 0) {
+                LOG.debug("Broke tryin'");
+                break;
             }
+            LOG.debug("obstacle " + i + " is trying to get spawned @ " + plannedSpawnAngle);
+                if (noNonPlayerGameObjectAlreadyAt(plannedSpawnAngle)) {
+                    Obstacle obstacle = obstaclePool.obtain();
+                    obstacle.setAngleToDegree(plannedSpawnAngle);
+                    newObstacles.add(obstacle);
+                    i++;
+                    attempts = 0;
+                } else {
+                    attempts++;
+
+                }
         }
         for (Obstacle ob: newObstacles) {
             obstacles.add(ob);
         }
 
-        obstacleTimer = 0;
     }
 
 
@@ -144,7 +156,7 @@ public class GameController {
                 Coin coin = coinPool.obtain();
                 coin.setAngleToDegree(plannedSpawnAngle);
                 if(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS)) {
-                    coin.spawnBodyHeightAbovePlanet();
+                    coin.spawnBodyHeightAbovePlanet(); // fixme
                 }
                 coins.add(coin);
                 i++;
@@ -155,19 +167,13 @@ public class GameController {
     private boolean noNonPlayerGameObjectAlreadyAt(float plannedSpawnAngle){
         Array<RectangularBase> arrayOfCoins = new Array<RectangularBase>(coins);
 
-        if (obstacles.size > 0) {
-            LOG.debug("With current logic this should not be called as obstacle logic now waits until Zero left.");
             boolean noObstaclesInWay = GdxUtils.reverseBooleanToCorrectContext(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS));
             boolean noCoinsInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
                            GameConfig.MIN_SEPARATION_OBJECTS);
 
-            return (noObstaclesInWay && noCoinsInWay);
-        }
-        boolean noCoinsInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
-                                   GameConfig.MIN_SEPARATION_OBJECTS);
 
-        LOG.debug("nocoins in way = " + noCoinsInWay);
-        return (noCoinsInWay);
+        LOG.debug("No coins in way = " + noCoinsInWay + " No obstacles in way = " + noObstaclesInWay);
+        return (noObstaclesInWay && noCoinsInWay);
 
     }
 
