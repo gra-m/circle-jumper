@@ -16,7 +16,7 @@ import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
-import fun.madeby.util.entity.EntityBase;
+import fun.madeby.util.GdxUtils;
 import fun.madeby.util.entity.RectangularBase;
 
 public class GameController {
@@ -68,28 +68,52 @@ public class GameController {
         }
         monster.updating(delta);
         spawnCoins(delta);
-        //spawnObstacles(delta);
+        spawnObstacles(delta);
         collisionDetection();
     }
 
     private void spawnObstacles(float delta) {
         obstacleTimer += delta;
 
-        if(obstacleMaxReached()) {
-            obstacleTimer = 0;
+        if(!timeToSpawnObstacle()) {
             return;
         }
 
         if (timeToSpawnObstacle()) {
-           obstacleTimer = 0;
-           Obstacle obstacle = obstaclePool.obtain();
-           obstacle.setAngleToDegree(getRandom(360));
-           obstacles.add(obstacle);
+            LOG.debug("timeToSpawnObstacle == true");
+            obstacleTimer = 0;
+            addZeroToMaxObstacles();
         }
     }
 
+    private void addZeroToMaxObstacles() {
+        int obstaclesToSpawn = (int) getRandom(0, GameConfig.ACTUAL_MAX_OBSTACLES + 1);
+        Array<Obstacle>  newObstacles = new Array<>(obstaclesToSpawn);
+
+        LOG.debug("addZeroToMaxObstacles trying to spawn " + obstaclesToSpawn +" obstacles");
+
+        for (int i = 0; i <= obstaclesToSpawn;) {
+            float plannedSpawnAngle = monster.getCircumferencePositionInDegrees() - i * GameConfig.MIN_SEPARATION_OBJECTS - MathUtils.random(60, 80);
+            LOG.debug("obstacle " + i + " is trying to get spawned @ " + plannedSpawnAngle);
+            if (noNonPlayerGameObjectAlreadyAt(plannedSpawnAngle)) {
+                Obstacle obstacle = obstaclePool.obtain();
+                obstacle.setAngleToDegree(plannedSpawnAngle);
+                newObstacles.add(obstacle);
+                i++;
+            }
+        }
+        for (Obstacle ob: newObstacles) {
+            obstacles.add(ob);
+        }
+
+        obstacleTimer = 0;
+    }
+
+
     private boolean timeToSpawnObstacle() {
-        return obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME;
+        boolean spawnObstacles =  obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME && obstacles.size == 0;
+        LOG.debug("timeToSpawnObstacles = " + spawnObstacles);
+        return spawnObstacles;
     }
 
 
@@ -103,7 +127,7 @@ public class GameController {
         }
 
     private void addZeroToTwoCoins() {
-        int coinsToSpawn = (int) getRandom(3);
+        int coinsToSpawn = (int) getRandom(0, GameConfig.ACTUAL_MAX_COINS + 1);
 
         for (int i = 0; i <= coinsToSpawn;) {
             float plannedSpawnAngle = MathUtils.random(360);
@@ -111,7 +135,7 @@ public class GameController {
             if (noPlayerOrExistingCollectableAt(plannedSpawnAngle)) {
                 Coin coin = coinPool.obtain();
                 coin.setAngleToDegree(plannedSpawnAngle);
-                if(butThereIsAnObstacle(plannedSpawnAngle)) {
+                if(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS)) {
                     coin.spawnBodyHeightAbovePlanet();
                 }
                 coins.add(coin);
@@ -120,21 +144,41 @@ public class GameController {
         }
     }
 
-    private boolean butThereIsAnObstacle(float plannedSpawnAngle) {
+    private boolean noNonPlayerGameObjectAlreadyAt(float plannedSpawnAngle){
+        Array<RectangularBase> arrayOfCoins = new Array<RectangularBase>(coins);
+
+        if (obstacles.size > 0) {
+            LOG.debug("With current logic this should not be called as obstacle logic now waits until Zero left.");
+            boolean noObstaclesInWay = GdxUtils.reverseBooleanToCorrectContext(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS));
+            boolean noCoinsInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
+                           GameConfig.MIN_SEPARATION_OBJECTS);
+
+            return (noObstaclesInWay && noCoinsInWay);
+        }
+        boolean noCoinsInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
+                                   GameConfig.MIN_SEPARATION_OBJECTS);
+
+        LOG.debug("nocoins in way = " + noCoinsInWay);
+        return (noCoinsInWay);
+
+    }
+
+
+    private boolean trueThatAnObjectClashedWith(float plannedSpawnAngle, float tolerance) {
         Array<RectangularBase> arrayOfObstacles = new Array<RectangularBase>(obstacles);
-        return !checkArrayOfGameObjectsAgainst(plannedSpawnAngle, arrayOfObstacles,
-                GameConfig.MIN_SPAWN_DISTANCE_ANGLE );
+        return !trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfObstacles,
+                tolerance );
 
     }
 
     private boolean noPlayerOrExistingCollectableAt(float plannedSpawnAngle) {
         boolean noPlayerInWay = checkAngle(plannedSpawnAngle,
                 monster.getCircumferencePositionInDegrees(),
-                GameConfig.MIN_SPAWN_DISTANCE_ANGLE);
+                GameConfig.MIN_SEPARATION_COINS);
 
         Array<RectangularBase> arrayOfCoins = new Array<RectangularBase>(coins);
-        boolean noCoinInWay = checkArrayOfGameObjectsAgainst(plannedSpawnAngle, arrayOfCoins,
-                GameConfig.MIN_SPAWN_DISTANCE_ANGLE);
+        boolean noCoinInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
+                GameConfig.MIN_SEPARATION_COINS);
 
 
         monster.getCircumferencePositionInDegrees();
@@ -144,9 +188,9 @@ public class GameController {
 
     }
 
-    private boolean checkArrayOfGameObjectsAgainst(float plannedSpawnAngle, Array<RectangularBase> array,
-                                                   float tolerance) {
-        // Only coins presently
+
+    private boolean trueIfArrayOfGameObjectsDoesNotClashWith(float plannedSpawnAngle, Array<RectangularBase> array,
+                                                             float tolerance) {
         Boolean nothingInWay = true;
         for (RectangularBase item : array) {
             boolean currentNotInWay;
@@ -198,16 +242,16 @@ public class GameController {
         return coinTimer >= GameConfig.COIN_SPAWN_TIME && coins.size == 0;
     }
 
-    private float getRandom(float betweenZeroAnd) {
-        return MathUtils.random(betweenZeroAnd);
+    private float getRandom(float min, float oneAboveRequiredMax) {
+        return MathUtils.random(min, oneAboveRequiredMax);
     }
 
     private boolean coinMaxReached() {
-        return coins.size >= GameConfig.MAX_COINS;
+        return coins.size >= GameConfig.ACTUAL_MAX_COINS;
     }
 
-    private boolean obstacleMaxReached() {
-        return obstacles.size >= GameConfig.MAX_OBSTACLES;
+    private boolean obstaclesStillOnScreen() {
+        return obstacles.size > 0;
     }
 
     private void collisionDetection() {
@@ -219,8 +263,10 @@ public class GameController {
         }
 
         for (int i = 0; i < obstacles.size; i++) {
-            if(collided(obstacles.get(i).getBoundsThatAreUsedForCollisionDetection()))
-                lifeLost(i);
+            if(collided(obstacles.get(i).getBoundsThatAreUsedForCollisionDetection())) {
+                //lifeLost(i);
+                reset();
+            }
         }
 
         for (int i = 0; i < obstacles.size; i++) {
@@ -261,6 +307,8 @@ public class GameController {
 
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
+        coinTimer = 0;
+        obstacleTimer = 0;
 
         waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
 

@@ -30,4 +30,13 @@ public class GdxUtils {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
+    /**
+     * Used when a method with opposite logic is reused elsewhere to save on duplication, but where
+     * it is best to explicitly show this is happening. Basically more obvious than !
+     * @return opposite boolean to that received
+     */
+    public static boolean reverseBooleanToCorrectContext(boolean reversing) {
+       return !reversing;
+    }
+
 }

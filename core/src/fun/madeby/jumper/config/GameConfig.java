@@ -30,16 +30,17 @@ public class GameConfig {
 
     public static final float OBSTACLE_SIZE = 1f;
     public static final float OBSTACLE_HALF_SIZE = MONSTER_SIZE / 2f;
-    public static final float OBSTACLE_SPAWN_TIME =  0.75f;
+    public static final float OBSTACLE_SPAWN_TIME =  5.0f;
 
     public static final float COIN_SIZE = 1f;
     public static final float COIN_HALF_SIZE = COIN_SIZE / 2f;
     public static final float COIN_SPAWN_TIME =  1.25f;
 
 
-    public static final int MIN_SPAWN_DISTANCE_ANGLE = 60;
-    public static final int MAX_OBSTACLES = 3;
-    public static final int MAX_COINS = 2;
+    public static final int ACTUAL_MAX_OBSTACLES = 3;
+    public static final int ACTUAL_MAX_COINS = 2;
+    public static final float MIN_SEPARATION_OBJECTS = 50;
+    public static final float MIN_SEPARATION_COINS = 60;
 
     public static final int COIN_SCORE = 20;
     public static final int JUMP_SCORE = 10;
