@@ -18,6 +18,7 @@ import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
 import fun.madeby.util.GdxUtils;
 import fun.madeby.util.entity.RectangularBase;
+import fun.madeby.util.utilclasses.BooleanTIntegerVHolder;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
@@ -56,10 +57,12 @@ public class GameController {
     }
 
     public void update(float delta) {
+        LOG.debug("Itbrokehere");
         if (waitBetweenGames > 0) {
             waitBetweenGames -= delta;
             return;
         }
+
 
         GameManager.getInstance().updateDisplayScores(delta);
 
@@ -74,20 +77,21 @@ public class GameController {
 
     private void spawnObstacles(float delta) {
         obstacleTimer += delta;
+        int maxToSpawn;
 
-        if(!timeToSpawnObstacle()) {
+        if(!okToSpawnObstacle().getT()) {
             return;
+        } else {
+            maxToSpawn = okToSpawnObstacle().getV();
         }
 
-        if (timeToSpawnObstacle()) {
-            LOG.debug("timeToSpawnObstacle == true");
+            LOG.debug("okToSpawnObstacle == true");
             obstacleTimer = 0;
-            addZeroToMaxObstacles();
-        }
+            addZeroToMaxObstacles(maxToSpawn);
     }
 
-    private void addZeroToMaxObstacles() {
-        int obstaclesToSpawn = (int) getRandom(0, GameConfig.ACTUAL_MAX_OBSTACLES + 1);
+    private void addZeroToMaxObstacles(int maxSpawnAmount) {
+        int obstaclesToSpawn = (int) getRandom(0, maxSpawnAmount + 1);
         Array<Obstacle>  newObstacles = new Array<>(obstaclesToSpawn);
 
         LOG.debug("addZeroToMaxObstacles trying to spawn " + obstaclesToSpawn +" obstacles");
@@ -110,10 +114,14 @@ public class GameController {
     }
 
 
-    private boolean timeToSpawnObstacle() {
-        boolean spawnObstacles =  obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME && obstacles.size == 0;
-        LOG.debug("timeToSpawnObstacles = " + spawnObstacles);
-        return spawnObstacles;
+    private BooleanTIntegerVHolder okToSpawnObstacle() {
+        boolean ok =  obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME &&
+                obstacles.size < GameConfig.ACTUAL_MAX_OBSTACLES;
+        BooleanTIntegerVHolder returnValues = new BooleanTIntegerVHolder(ok,
+                GameConfig.ACTUAL_MAX_OBSTACLES - obstacles.size);
+
+        LOG.debug("timeToSpawnObstacles = " + ok);
+        return returnValues;
     }
 
 
@@ -244,14 +252,6 @@ public class GameController {
 
     private float getRandom(float min, float oneAboveRequiredMax) {
         return MathUtils.random(min, oneAboveRequiredMax);
-    }
-
-    private boolean coinMaxReached() {
-        return coins.size >= GameConfig.ACTUAL_MAX_COINS;
-    }
-
-    private boolean obstaclesStillOnScreen() {
-        return obstacles.size > 0;
     }
 
     private void collisionDetection() {
