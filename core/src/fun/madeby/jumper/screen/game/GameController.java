@@ -29,7 +29,7 @@ public class GameController {
     private float coinTimer;
     private float obstacleTimer;
     private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
-    private int testLives = 5;
+    private int testLives = 1;
     private int testLivesLost;
 
 
@@ -270,8 +270,8 @@ public class GameController {
 
         for (int i = 0; i < obstacles.size; i++) {
             if(collided(obstacles.get(i).getBoundsThatAreUsedForCollisionDetection())) {
-                //lifeLost(i);
-                reset();
+                lifeLost(i);
+                //reset();
             }
         }
 

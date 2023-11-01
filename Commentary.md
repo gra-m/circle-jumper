@@ -5,3 +5,30 @@
     because after debugging it was interesting to see how pared back the additions could be. It seems
     that a lot of the issues were caused by the java language level target being 1.7 and not 1.8.
     As ever, the additions were effective at one point or another along the way. They are left for reference.
+
+## 229.
+* Refactored all code in spawning improvement
+- In fact just watched videos and implemented own code. Using array to collect agreed safe (single) spawns.
+- Working but =>
+  - only one obstacle is spawning at a time, where randomly this should be more.
+    - This is I think because params need tweaking there is a limit of attempts at finding a suitable 
+    position, but after the first new obstacle has been placed in a kind of spawn queue, the queue needs
+    to be taken into consideration too. Basically this is an interesting problem that I would like to extract
+    and re-invent.
+  - Coins spawning above obstacles not working
+*  Thoughts at time:  
+- As soon as there is one obstacle or coin there are specific slots of opportunity pertaining to all
+future obstacles in a particular spawn cycle.
+  - Object 1 spawned at angle 0 + x for object width + x for next object of that type == slot for next
+and so on. 
+  - There are two spawning behaviours in play coins that only respawn when there are none left and
+their time-delay has elapsed -> up to max allowed. 
+  - obstacles that spawn on the time delay up to max allowed and what should be more than one at a time.
+
+It strikes me that the use of a spawn queue where these die are rolled in advance and played out when criteria are met
+is in order == 'Give me the first mapping for *two* obstacles with an origin of 67 without anything @ 10 and 230'.
+Either an array of arrays or even poolable objects groups with quickly readable signatures? 
+
+This could be a fun thing to try.
+
+Also, I have not looked into the trigonometry running this yet, some research into this would be beneficial too.
