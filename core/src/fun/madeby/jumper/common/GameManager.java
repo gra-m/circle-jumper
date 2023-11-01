@@ -1,6 +1,12 @@
 package fun.madeby.jumper.common;
 
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+
+import fun.madeby.jumper.CircleJumperGame;
+import fun.madeby.jumper.config.GameConfig;
+
 /**
  * Thread safe Singleton with low overhead and reasons for the extra 'result' var
  *
@@ -10,6 +16,7 @@ public class GameManager {
         private static volatile GameManager gameManagerInstance;
         private static Object mutex = new Object();
 
+        private Preferences prefs;
         private int score;
         private int displayedScore;
         private int highScore;
@@ -91,8 +98,19 @@ public class GameManager {
             return result;
         }
 
-    private GameManager(){}
-    // todo add lives for fun later
-   /* public void decrementLives() {
-    }*/
+    private GameManager(){
+        //lives implemented in GameController
+        prefs = Gdx.app.getPreferences(CircleJumperGame.class.getSimpleName());
+        highScore = prefs.getInteger(GameConfig.PREF_KEY_HIGH_SCORE, 0);
+        displayedHighScore = highScore;
+    }
+
+    public void updateHighScore(){
+        if (score < highScore) {
+            return;
+        }
+        highScore = score;
+        prefs.putInteger(GameConfig.PREF_KEY_HIGH_SCORE, highScore);
+        prefs.flush();
+    }
 }

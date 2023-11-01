@@ -308,13 +308,14 @@ public class GameController {
 
         obstaclePool.freeAll(obstacles);
         obstacles.clear();
-
-        GameManager.getInstance().reset();
-
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
         coinTimer = 0;
         obstacleTimer = 0;
+
+        GameManager.getInstance().updateHighScore();
+        GameManager.getInstance().reset();
+
 
         waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
 

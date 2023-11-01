@@ -2,6 +2,9 @@ package fun.madeby.jumper.config;
 
 public class GameConfig {
 
+    // key for highScore preferences retrieved on game start
+    public static final String PREF_KEY_HIGH_SCORE = "highScore";
+
     public static final float WIDTH = 600f; // pixels
     public static final float HEIGHT = 800f; // pixels
 

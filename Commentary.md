@@ -32,3 +32,9 @@ Either an array of arrays or even poolable objects groups with quickly readable 
 This could be a fun thing to try.
 
 Also, I have not looked into the trigonometry running this yet, some research into this would be beneficial too.
+
+## 230
+
+Highscore is being retained but, have just noticed is being 'smoothed' with every score whereas score is not.
+Part and parcel of not testing as going along, this kind of thing would not happen if own code all the way..
+Would not move on until working, kind of slapdash, but going to pull together at end.
