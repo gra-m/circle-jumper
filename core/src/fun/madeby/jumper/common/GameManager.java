@@ -3,6 +3,7 @@ package fun.madeby.jumper.common;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Logger;
 
 import fun.madeby.jumper.CircleJumperGame;
 import fun.madeby.jumper.config.GameConfig;
@@ -15,6 +16,7 @@ import fun.madeby.jumper.config.GameConfig;
 public class GameManager {
         private static volatile GameManager gameManagerInstance;
         private static Object mutex = new Object();
+        private static final Logger LOG = new Logger(GameManager.class.getName(), Logger.DEBUG);
 
         private Preferences prefs;
         private int score;
@@ -29,6 +31,7 @@ public class GameManager {
 
         public void incrementScore(int amount){
             score += amount;
+            LOG.debug("Score just incremented: " + score + " " + highScore);
             checkAndSetNewHighScore();
         }
 
@@ -39,10 +42,13 @@ public class GameManager {
     }
 
     public void updateDisplayScores(float delta) {
+            LOG.debug("score/displayed score = " + score + " " + displayedScore);
             if (score > displayedScore) {
+                LOG.debug("Calling smooth current score");
                 smoothDisplayedScores(true, score, displayedScore, delta);
             }
             if (highScore > displayedHighScore) {
+                LOG.debug("Calling smooth high score");
                 smoothDisplayedScores(false, highScore, displayedHighScore, delta);
             }
     }
@@ -53,17 +59,21 @@ public class GameManager {
      * already displayed value. I wrote this so I had to look at it. Though to be fair it could be
      * extended.
      * @param isCurrentScore if true == score if false == highScore
-     * @param currentValue the value of the current score or highScore
-     * @param displayedValue the current displayed value for the current value
+     * @param currentValue the current in game value of the score or highScore
+     * @param currentDisplayedValue the current displayed value of the score or highscore
      * @param delta the time elapsed since the last frame
      */
-    private void smoothDisplayedScores(boolean isCurrentScore, int currentValue, int displayedValue , float delta) {
-            displayedValue = Math.min(currentValue, displayedValue + (int) (100 * delta));
+    private void smoothDisplayedScores(boolean isCurrentScore, int currentValue, int currentDisplayedValue , float delta) {
+        int updateDisplayValueToThis;
+            updateDisplayValueToThis = Math.min(currentValue, currentDisplayedValue + (int) (100 * delta));
 
             if (isCurrentScore) {
-                displayedScore = displayedValue;
+                LOG.debug("Updating displayed score to updateDisplayValueToThis");
+                displayedScore = updateDisplayValueToThis;
+            } else {
+                LOG.debug("Updating high score to updateDisplayValueToThis");
+                displayedHighScore = updateDisplayValueToThis;
             }
-            displayedHighScore = displayedValue;
 
 
 
@@ -74,7 +84,7 @@ public class GameManager {
     }
 
     public int getDisplayedScore() {
-        return this.score;
+        return this.displayedScore;
     }
 
     public int getHighScore() {
@@ -105,6 +115,9 @@ public class GameManager {
         displayedHighScore = highScore;
     }
 
+    /**
+     * Save highscore to GameConfig file.
+     */
     public void updateHighScore(){
         if (score < highScore) {
             return;

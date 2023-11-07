@@ -31,6 +31,7 @@ public class GameController {
     private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
     private int testLives = 1;
     private int testLivesLost;
+    private boolean logging = false;
 
 
     private Planet planet;
@@ -43,6 +44,10 @@ public class GameController {
         init();
     }
     private void init() {
+        if (logging) {
+            LOG.debug("init Called");
+        }
+
         planet = new Planet();
         planet.setPosition(GameConfig.WORLD_CENTER_X,GameConfig.WORLD_CENTER_Y);
         planet.setSize(GameConfig.PLANET_RADIUS);
@@ -57,12 +62,10 @@ public class GameController {
     }
 
     public void update(float delta) {
-        LOG.debug("Itbrokehere");
         if (waitBetweenGames > 0) {
             waitBetweenGames -= delta;
             return;
         }
-
 
         GameManager.getInstance().updateDisplayScores(delta);
 
@@ -85,7 +88,10 @@ public class GameController {
             maxToSpawn = okToSpawnObstacle().getV();
         }
 
+        if (logging) {
             LOG.debug("okToSpawnObstacle == true");
+        }
+
             addZeroToMaxObstacles(maxToSpawn);
             obstacleTimer = 0;
     }
@@ -95,7 +101,10 @@ public class GameController {
         Array<Obstacle>  newObstacles = new Array<>(obstaclesToSpawn);
         int attempts = 1;
 
-        LOG.debug("addZeroToMaxObstacles trying to spawn " + obstaclesToSpawn +" obstacles");
+        if (logging) {
+            LOG.debug("addZeroToMaxObstacles trying to spawn " + obstaclesToSpawn +" obstacles");
+        }
+
 
         // fixme obstacles are being called so quikly afterward the previously spawned is blocking the next. Attempts just stops crash
         // spawns only one.
@@ -107,7 +116,9 @@ public class GameController {
                 LOG.debug("Broke tryin'");
                 break;
             }
+            if (logging) {
             LOG.debug("obstacle " + i + " is trying to get spawned @ " + plannedSpawnAngle);
+            }
                 if (noNonPlayerGameObjectAlreadyAt(plannedSpawnAngle)) {
                     Obstacle obstacle = obstaclePool.obtain();
                     obstacle.setAngleToDegree(plannedSpawnAngle);
@@ -132,7 +143,9 @@ public class GameController {
         BooleanTIntegerVHolder returnValues = new BooleanTIntegerVHolder(ok,
                 GameConfig.ACTUAL_MAX_OBSTACLES - obstacles.size);
 
-        LOG.debug("timeToSpawnObstacles = " + ok);
+        if (logging) {
+            LOG.debug("timeToSpawnObstacles = " + ok);
+        }
         return returnValues;
     }
 
@@ -171,8 +184,10 @@ public class GameController {
             boolean noCoinsInWay = trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfCoins,
                            GameConfig.MIN_SEPARATION_OBJECTS);
 
+        if(logging) {
+            LOG.debug("No coins in way = " + noCoinsInWay + " No obstacles in way = " + noObstaclesInWay);
+        }
 
-        LOG.debug("No coins in way = " + noCoinsInWay + " No obstacles in way = " + noObstaclesInWay);
         return (noObstaclesInWay && noCoinsInWay);
 
     }
@@ -322,6 +337,9 @@ public class GameController {
     }
 
     private void jumpSuccessScore(int jumpedObstacle) {
+        if (logging) {
+            LOG.debug("jumpSuccessScore");
+        }
         Obstacle jumped = obstacles.removeIndex(jumpedObstacle);
         obstaclePool.free(jumped);
         GameManager.getInstance().incrementScore(GameConfig.JUMP_SCORE);

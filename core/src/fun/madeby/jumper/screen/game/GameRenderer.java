@@ -99,8 +99,8 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawScores() {
-        String scoreString = "SCORE: " + GameManager.getInstance().getDisplayedScore();
-        String highScoreString = "HIGH-SCORE: " + GameManager.getInstance().getDisplayedHighScore();
+        String scoreString = "SCORE " + GameManager.getInstance().getDisplayedScore();
+        String highScoreString = "HIGH SCORE " + GameManager.getInstance().getDisplayedHighScore();
 
         float allHudTextY = hudViewport.getWorldHeight() - GameConfig.HUD_SCORE_PADDING;
         float highScoreX = GameConfig.HUD_SCORE_PADDING;

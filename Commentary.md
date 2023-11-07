@@ -38,3 +38,8 @@ Also, I have not looked into the trigonometry running this yet, some research in
 Highscore is being retained but, have just noticed is being 'smoothed' with every score whereas score is not.
 Part and parcel of not testing as going along, this kind of thing would not happen if own code all the way..
 Would not move on until working, kind of slapdash, but going to pull together at end.
+
+## 230Extra_scoring_circumference
+
+Decided to take a quick look at these -> circumference should read radius regarding spawning coins
+successfully above existing obstacles. Just going to take a quick look.
