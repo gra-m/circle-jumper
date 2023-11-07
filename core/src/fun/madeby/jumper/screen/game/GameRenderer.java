@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import fun.madeby.jumper.assetinfo.AssetDescriptors;
+import fun.madeby.jumper.assetinfo.RegionNames;
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
@@ -41,6 +44,9 @@ public class GameRenderer implements Disposable {
 
     private DebugCameraController debugCameraController;
 
+    private TextureRegion backgroundRegion;
+    private TextureRegion planetRegion;
+
     public GameRenderer(GameController gameController, AssetManager assetManager,
                         SpriteBatch spriteBatch) {
         controller = gameController;
@@ -56,7 +62,10 @@ public class GameRenderer implements Disposable {
         shapeRenderer = new ShapeRenderer();
         debugCameraController = new DebugCameraController();
         debugCameraController.setStartPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
+        TextureAtlas gamePlayAtlas = assetManager.get(AssetDescriptors.GAME_PLAY_ATLAS);
 
+        backgroundRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND);
+        planetRegion = gamePlayAtlas.findRegion(RegionNames.PLANET);
         hudFont = assetManager.get(AssetDescriptors.HUD_FONT);
     }
 
@@ -66,8 +75,27 @@ public class GameRenderer implements Disposable {
 
         //testDebugControllerRendering();
 
+        renderGamePlay(delta);
         renderDebug();
         renderHud();
+    }
+
+    private void renderGamePlay(float delta) {
+        viewport.apply();
+
+        spriteBatch.setProjectionMatrix(camera.combined);
+        spriteBatch.begin();
+        drawGamePlay(delta);
+        spriteBatch.end();
+    }
+
+    private void drawGamePlay(float delta) {
+        spriteBatch.draw(backgroundRegion, 0, 0, GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+
+        Planet planet = controller.getPlanet();
+        spriteBatch.draw(planetRegion, planet.getX()- planet.getWidthOrRadius(),
+                planet.getY() - planet.getWidthOrRadius(), planet.getWidthOrRadius() * 2,
+                planet.getWidthOrRadius() * 2);
     }
 
     private void renderHud() {
