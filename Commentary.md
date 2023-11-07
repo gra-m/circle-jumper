@@ -39,7 +39,9 @@ Highscore is being retained but, have just noticed is being 'smoothed' with ever
 Part and parcel of not testing as going along, this kind of thing would not happen if own code all the way..
 Would not move on until working, kind of slapdash, but going to pull together at end.
 
-## 230Extra_scoring_circumference
+## 230Extra_scoring_circumference 
 
 Decided to take a quick look at these -> circumference should read radius regarding spawning coins
 successfully above existing obstacles. Just going to take a quick look.
+Fixed the scoring decided to leave the rendering of coins until it is (possibly) completely redesigned.
+
