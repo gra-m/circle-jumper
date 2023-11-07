@@ -40,6 +40,8 @@ public class LoadingScreen extends ScreenAdapter {
         viewport = new FitViewport(camera.viewportWidth, camera.viewportHeight, camera);
         shapeRenderer = new ShapeRenderer();
         assetManager.load(AssetDescriptors.HUD_FONT);
+        assetManager.load(AssetDescriptors.GAME_PLAY_ATLAS);
+
     }
 
     @Override

@@ -1,13 +1,17 @@
 package fun.madeby.jumper.entity;
 
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
 
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.util.entity.RectangularBase;
 
 public class Coin extends RectangularBase implements Pool.Poolable {
+    private static final Logger LOG = new Logger(Coin.class.getName(), Logger.DEBUG);
     private boolean spawnBodyHeightAbovePlanet;
+
+
 
 
     public void setAngleToDegree(float angle) {
@@ -39,6 +43,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     }
 
     public void spawnBodyHeightAbovePlanet() {
+        LOG.debug("A COIN'S SPAWN RADIUS HAS BEEN ADJUSTED.");
         spawnBodyHeightAbovePlanet = true;
     }
 
