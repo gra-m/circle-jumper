@@ -28,6 +28,7 @@ public class GameController {
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float coinTimer;
     private float obstacleTimer;
+    private float animationTime;
     private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
     private int testLives = 1;
     private int testLivesLost;
@@ -62,6 +63,7 @@ public class GameController {
     }
 
     public void update(float delta) {
+        animationTime += delta;
         if (waitBetweenGames > 0) {
             waitBetweenGames -= delta;
             return;
@@ -262,6 +264,8 @@ public class GameController {
         return obstacles;
     }
 
+    public float getAnimationTime(){return animationTime;}
+
     public float getWaitBetweenGames() {
         return waitBetweenGames;
     }
@@ -318,6 +322,7 @@ public class GameController {
     }
 
     private void reset() {
+        animationTime = 0f;
         coinPool.freeAll(coins);
         coinPool.clear();
 

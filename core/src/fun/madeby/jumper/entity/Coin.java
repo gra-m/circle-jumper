@@ -19,15 +19,15 @@ public class Coin extends RectangularBase implements Pool.Poolable {
 
         float radius = GameConfig.PLANET_RADIUS;
 
-        if(this.spawnBodyHeightAbovePlanet) {
+        if(spawnBodyHeightAbovePlanet) {
             radius+= GameConfig.COIN_SIZE;
         }
 
         float originX = GameConfig.WORLD_CENTER_X;
         float originY = GameConfig.WORLD_CENTER_Y;
 
-        float newX = originX + MathUtils.cosDeg(-circumferencePositionInDegrees) * (radius);
-        float newY = originY + MathUtils.sinDeg(-circumferencePositionInDegrees) * (radius);
+        float newX = originX + (MathUtils.cosDeg(-circumferencePositionInDegrees) * radius);
+        float newY = originY + (MathUtils.sinDeg(-circumferencePositionInDegrees) * radius);
 
         setPosition(newX, newY);
     }
@@ -43,6 +43,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     }
 
     public void spawnBodyHeightAbovePlanet() {
+        // todo have seen that this is called
         LOG.debug("A COIN'S SPAWN RADIUS HAS BEEN ADJUSTED.");
         spawnBodyHeightAbovePlanet = true;
     }

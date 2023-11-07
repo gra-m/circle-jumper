@@ -4,6 +4,7 @@ package fun.madeby.jumper.screen.game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -46,6 +48,9 @@ public class GameRenderer implements Disposable {
 
     private TextureRegion backgroundRegion;
     private TextureRegion planetRegion;
+    private Animation coinAnimation;
+    private Animation obstacleAnimation;
+    private Animation monsterAnimation;
 
     public GameRenderer(GameController gameController, AssetManager assetManager,
                         SpriteBatch spriteBatch) {
@@ -66,6 +71,13 @@ public class GameRenderer implements Disposable {
 
         backgroundRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND);
         planetRegion = gamePlayAtlas.findRegion(RegionNames.PLANET);
+        obstacleAnimation = new Animation(0.1f, gamePlayAtlas.findRegions(RegionNames.OBSTACLE),
+                Animation.PlayMode.LOOP_PINGPONG);
+        monsterAnimation = new Animation (0.1f, gamePlayAtlas.findRegions(RegionNames.PLAYER),
+                Animation.PlayMode.LOOP_PINGPONG);
+        coinAnimation = new Animation (0.1f, gamePlayAtlas.findRegions(RegionNames.COIN),
+        Animation.PlayMode.LOOP_PINGPONG);
+
         hudFont = assetManager.get(AssetDescriptors.HUD_FONT);
     }
 
@@ -96,6 +108,36 @@ public class GameRenderer implements Disposable {
         spriteBatch.draw(planetRegion, planet.getX()- planet.getWidthOrRadius(),
                 planet.getY() - planet.getWidthOrRadius(), planet.getWidthOrRadius() * 2,
                 planet.getWidthOrRadius() * 2);
+
+        Array<Obstacle> obstacles = controller.getObstacles();
+        TextureRegion obstacleRegion = (TextureRegion) obstacleAnimation.getKeyFrame(controller.getAnimationTime());
+        for (Obstacle obstacle : obstacles) {
+            spriteBatch.draw(obstacleRegion ,obstacle.getX(), obstacle.getY(),
+                    0, 0,
+                    obstacle.getWidthOrRadius(),
+                    obstacle.getHeight(),
+                    1.0f, 1.0f,
+                    GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
+
+        }
+
+        Array<Coin> coins = controller.getCoins();
+        TextureRegion coinTexture = (TextureRegion) coinAnimation.getKeyFrame(controller.getAnimationTime());
+        for (Coin coin : coins) {
+            spriteBatch.draw(coinTexture, coin.getX(), coin.getY(),
+                    0, 0,
+                    coin.getWidthOrRadius(),
+                    coin.getHeight(),
+                    1.0f, 1.0f,
+                    GameConfig.START_ANGLE - coin.getCircumferencePositionInDegrees());
+        }
+
+        Monster monster = controller.getMonster();
+        TextureRegion monsterTexture = (TextureRegion) monsterAnimation.getKeyFrame(controller.getAnimationTime());
+        spriteBatch.draw(monsterTexture, monster.getX(), monster.getY(),
+                0, 0, monster.getWidthOrRadius(), monster.getHeight(),
+                1.0f, 1.0f,
+                GameConfig.START_ANGLE - monster.getCircumferencePositionInDegrees());
     }
 
     private void renderHud() {
