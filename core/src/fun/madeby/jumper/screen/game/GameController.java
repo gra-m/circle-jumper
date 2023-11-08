@@ -17,6 +17,7 @@ import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
+import fun.madeby.jumper.screen.menu.OverlayCallback;
 import fun.madeby.util.GdxUtils;
 import fun.madeby.util.entity.RectangularBase;
 import fun.madeby.util.utilclasses.BooleanTIntegerVHolder;
@@ -42,6 +43,7 @@ public class GameController {
     private Monster monster;
     private float monsterStartX;
     private float monsterStartY;
+    private OverlayCallback callback;
 
 
     public GameController() {
@@ -63,6 +65,21 @@ public class GameController {
         monster.setPosition(monsterStartX,
                 monsterStartY);
 
+        callback =  new OverlayCallback() {
+            @Override
+            public void home() {
+                gameState = GameState.MENU;
+
+            }
+
+            @Override
+            public void ready() {
+                restart();
+                gameState = GameState.READY;
+
+            }
+        };
+
     }
 
     public void update(float delta) {
@@ -74,7 +91,7 @@ public class GameController {
             }
         }
 
-        if(!GameState.GAME_OVER.isPlaying()) {
+        if(!gameState.isPlaying()) {
             return;
         }
 
@@ -372,5 +389,14 @@ public class GameController {
 
     private boolean collided(Rectangle itemBounds) {
         return Intersector.overlaps(monster.getBoundsThatAreUsedForCollisionDetection(), itemBounds);
+    }
+
+    public OverlayCallback getOverlayCallback() {
+        return callback;
+    }
+
+
+    public GameState getGameState() {
+        return gameState;
     }
 }

@@ -51,6 +51,7 @@ public class MenuOverlay extends Table {
 
 
         Table scoreTable = new Table();
+        scoreTable.setSkin(getSkin());
         scoreTable.add("BEST: ").row();
         highScoreLabel = new Label("", getSkin());
         updateLabel();
