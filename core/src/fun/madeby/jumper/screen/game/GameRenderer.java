@@ -128,7 +128,7 @@ public class GameRenderer implements Disposable {
                     0, 0,
                     coin.getWidthOrRadius(),
                     coin.getHeight(),
-                    1.0f, 1.0f,
+                    coin.getScale(), coin.getScale(),
                     GameConfig.START_ANGLE - coin.getCircumferencePositionInDegrees());
         }
 
@@ -255,7 +255,7 @@ public class GameRenderer implements Disposable {
                     coinBounds.x, coinBounds.y,
                     0, 0,
                     coinBounds.width, coinBounds.height,
-                    1, 1,
+                    coin.getScale(), coin.getScale(),
                     GameConfig.START_ANGLE - coin.getCircumferencePositionInDegrees());
 
         }

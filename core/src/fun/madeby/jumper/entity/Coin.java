@@ -62,4 +62,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     public void spawnOnPlanet() {
         spawnBodyHeightAbovePlanet = false;
     }
+
+    public float getScale() { return scale;
+    }
 }
