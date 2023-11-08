@@ -10,9 +10,16 @@ import fun.madeby.util.entity.RectangularBase;
 public class Coin extends RectangularBase implements Pool.Poolable {
     private static final Logger LOG = new Logger(Coin.class.getName(), Logger.DEBUG);
     private boolean spawnBodyHeightAbovePlanet;
+    private float scale;
 
 
+    public void update(float delta) {
+        if (scale < GameConfig.COIN_SIZE) {
+            scale+= delta/2;
+            this.setSize(scale, scale);
+        }
 
+    }
 
     public void setAngleToDegree(float angle) {
         circumferencePositionInDegrees = angle % 360;
@@ -42,6 +49,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     @Override
     public void reset() {
         spawnBodyHeightAbovePlanet = false;
+        scale = 0;
 
     }
 

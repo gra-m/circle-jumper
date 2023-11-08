@@ -78,6 +78,11 @@ public class GameController {
         for (Obstacle ob : obstacles) {
             ob.update(delta);
         }
+
+        for (Coin coin : coins) {
+            coin.update(delta);
+        }
+
         spawnCoins(delta);
         spawnObstacles(delta);
         collisionDetection();
