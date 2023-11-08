@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
 import fun.madeby.jumper.common.GameManager;
+import fun.madeby.jumper.common.GameState;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
@@ -35,11 +36,13 @@ public class GameController {
     private boolean logging = false;
 
 
+    private GameState gameState = GameState.MENU;
     private Planet planet;
 
     private Monster monster;
     private float monsterStartX;
     private float monsterStartY;
+
 
     public GameController() {
         init();
@@ -63,11 +66,19 @@ public class GameController {
     }
 
     public void update(float delta) {
-        animationTime += delta;
-        if (waitBetweenGames > 0) {
+
+        if (gameState.isReady() && waitBetweenGames > 0) {
             waitBetweenGames -= delta;
+            if (waitBetweenGames <= 0) {
+                gameState = GameState.PLAYING;
+            }
+        }
+
+        if(!GameState.GAME_OVER.isPlaying()) {
             return;
         }
+
+        animationTime += delta;
 
         GameManager.getInstance().updateDisplayScores(delta);
 
@@ -326,10 +337,11 @@ public class GameController {
      */
     private void decrementLives() {
         if (testLivesLost++ >= testLives)
-            reset();
+            gameState = GameState.GAME_OVER;
     }
 
-    private void reset() {
+    public void restart() {
+        gameState = GameState.READY;
         animationTime = 0f;
         coinPool.freeAll(coins);
         coinPool.clear();

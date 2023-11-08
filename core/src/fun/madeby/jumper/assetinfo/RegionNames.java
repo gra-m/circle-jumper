@@ -8,6 +8,7 @@ public class RegionNames {
     public static final String PLAYER_IDLE = "player-idle";
     public static final String PLANET = "earth";
     public static final String BACKGROUND = "background";
+    public static final String LOGO = "logo";
 
 
     private RegionNames(){}
