@@ -11,8 +11,27 @@ public class Obstacle extends RectangularBase implements Pool.Poolable {
     private float degreeOfAngle;
     private Rectangle jumpSuccessSensor;
     private float sensorDegreeOfAngle;
+    private float radius = GameConfig.PLANET_RADIUS - GameConfig.OBSTACLE_SIZE;
 
 
+    public void update(float delta) {
+        if (radius < GameConfig.PLANET_RADIUS) {
+            radius+= delta/2;
+            float originX = GameConfig.WORLD_CENTER_X;
+            float originY = GameConfig.WORLD_CENTER_Y;
+
+            // Obstacle
+            float newX = originX + MathUtils.cosDeg(-degreeOfAngle) * radius;
+            float newY = originY + MathUtils.sinDeg(-degreeOfAngle) * radius;
+            setPosition(newX, newY);
+
+            // Sensor
+            float sensorX = originX + MathUtils.cosDeg(-sensorDegreeOfAngle) * radius;
+            float sensorY = originY + MathUtils.sinDeg(-sensorDegreeOfAngle) * radius;
+
+            jumpSuccessSensor.set(sensorX, sensorY, getWidthOrRadius(), getHeight());
+        }
+    }
 
     public void setAngleToDegree(float angle) {
         degreeOfAngle = angle % 360;
@@ -20,20 +39,7 @@ public class Obstacle extends RectangularBase implements Pool.Poolable {
 
         sensorDegreeOfAngle = degreeOfAngle + 20f;
 
-        float radius = GameConfig.PLANET_RADIUS;
-        float originX = GameConfig.WORLD_CENTER_X;
-        float originY = GameConfig.WORLD_CENTER_Y;
 
-        // Obstacle
-        float newX = originX + MathUtils.cosDeg(-degreeOfAngle) * radius;
-        float newY = originY + MathUtils.sinDeg(-degreeOfAngle) * radius;
-        setPosition(newX, newY);
-
-        // Sensor
-        float sensorX = originX + MathUtils.cosDeg(-sensorDegreeOfAngle) * radius;
-        float sensorY = originY + MathUtils.sinDeg(-sensorDegreeOfAngle) * radius;
-
-        jumpSuccessSensor.set(sensorX, sensorY, getWidthOrRadius(), getHeight());
     }
 
     public float getDegreeOfAngle() {
@@ -50,6 +56,6 @@ public class Obstacle extends RectangularBase implements Pool.Poolable {
 
     @Override
     public void reset() {
-
+        radius = GameConfig.PLANET_RADIUS - GameConfig.OBSTACLE_SIZE;
     }
 }

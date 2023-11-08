@@ -104,11 +104,6 @@ public class GameRenderer implements Disposable {
     private void drawGamePlay(float delta) {
         spriteBatch.draw(backgroundRegion, 0, 0, GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
 
-        Planet planet = controller.getPlanet();
-        spriteBatch.draw(planetRegion, planet.getX()- planet.getWidthOrRadius(),
-                planet.getY() - planet.getWidthOrRadius(), planet.getWidthOrRadius() * 2,
-                planet.getWidthOrRadius() * 2);
-
         Array<Obstacle> obstacles = controller.getObstacles();
         TextureRegion obstacleRegion = (TextureRegion) obstacleAnimation.getKeyFrame(controller.getAnimationTime());
         for (Obstacle obstacle : obstacles) {
@@ -120,6 +115,11 @@ public class GameRenderer implements Disposable {
                     GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
 
         }
+
+        Planet planet = controller.getPlanet();
+        spriteBatch.draw(planetRegion, planet.getX()- planet.getWidthOrRadius(),
+                planet.getY() - planet.getWidthOrRadius(), planet.getWidthOrRadius() * 2,
+                planet.getWidthOrRadius() * 2);
 
         Array<Coin> coins = controller.getCoins();
         TextureRegion coinTexture = (TextureRegion) coinAnimation.getKeyFrame(controller.getAnimationTime());

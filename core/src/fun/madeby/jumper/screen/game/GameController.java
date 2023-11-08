@@ -75,6 +75,9 @@ public class GameController {
             monster.makeStateJumping();
         }
         monster.updating(delta);
+        for (Obstacle ob : obstacles) {
+            ob.update(delta);
+        }
         spawnCoins(delta);
         spawnObstacles(delta);
         collisionDetection();
