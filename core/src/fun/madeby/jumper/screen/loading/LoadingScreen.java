@@ -41,6 +41,7 @@ public class LoadingScreen extends ScreenAdapter {
         shapeRenderer = new ShapeRenderer();
         assetManager.load(AssetDescriptors.HUD_FONT);
         assetManager.load(AssetDescriptors.GAME_PLAY_ATLAS);
+        assetManager.load(AssetDescriptors.SKIN);
 
     }
 
