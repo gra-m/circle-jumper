@@ -7,15 +7,21 @@ import com.badlogic.gdx.utils.Pool;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.util.entity.RectangularBase;
 
-public class Coin extends RectangularBase implements Pool.Poolable {
+public class Coin extends Spawner {
     private static final Logger LOG = new Logger(Coin.class.getName(), Logger.DEBUG);
     private boolean spawnBodyHeightAbovePlanet;
 
+    public Coin(int priority, int height) {
+        super(priority, height);
+    }
 
+    public Coin() {
+        super(2, 1);
+    }
 
 
     public void setAngleToDegree(float angle) {
-        circumferencePositionInDegrees = angle % 360;
+        super.circumferencePositionInDegrees = angle % 360;
 
         float radius = GameConfig.PLANET_RADIUS;
 

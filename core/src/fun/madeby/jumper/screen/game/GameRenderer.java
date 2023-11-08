@@ -117,7 +117,7 @@ public class GameRenderer implements Disposable {
                     obstacle.getWidthOrRadius(),
                     obstacle.getHeight(),
                     1.0f, 1.0f,
-                    GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
+                    GameConfig.START_ANGLE - obstacle.getCircumferencePositionInDegrees());
 
         }
 
@@ -270,7 +270,7 @@ public class GameRenderer implements Disposable {
                     0, 0,
                     obstacleBounds.width, obstacleBounds.height,
                     1, 1,
-                    GameConfig.START_ANGLE - obstacle.getDegreeOfAngle());
+                    GameConfig.START_ANGLE - obstacle.getCircumferencePositionInDegrees());
 
             shapeRenderer.setColor(Color.WHITE);
             shapeRenderer.rect(

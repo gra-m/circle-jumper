@@ -11,6 +11,10 @@ public class Monster extends RectangularBase {
     private float acceleration = GameConfig.MONSTER_START_ACCELERATION;
     private MonsterState monstersState = MonsterState.WALKING;
 
+    public Monster(int height) {
+        super(height);
+    }
+
 
     /**
      * Speed and angle used to calculate and update position every frame

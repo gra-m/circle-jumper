@@ -4,15 +4,16 @@ import com.badlogic.gdx.math.Rectangle;
 
 public abstract class RectangularBase extends EntityBase{
 
-    private static final  float REQUIRED_TO_SET_MONSTER_TRIGONOMETRY = -90f;
-    protected float circumferencePositionInDegrees = REQUIRED_TO_SET_MONSTER_TRIGONOMETRY;
-    protected float height = 1;
+    private static final  float THIS_INITIAL_VALUE_REQUIRED_TO_SET_MONSTER_TRIGONOMETRY = -90f;
+    protected float circumferencePositionInDegrees = THIS_INITIAL_VALUE_REQUIRED_TO_SET_MONSTER_TRIGONOMETRY;
+    protected float height;
 
     // any change to size or position of an entity with a texture needs the bounds to follow
     protected Rectangle boundsForCollisionDetection;
 
-    public RectangularBase(){
+    public RectangularBase(int height){
         boundsForCollisionDetection = new Rectangle(x, y, widthOrRadius, height);
+        this.height = height;
     }
 
     public float getCircumferencePositionInDegrees() {

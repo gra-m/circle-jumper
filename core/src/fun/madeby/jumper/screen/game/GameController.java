@@ -16,16 +16,20 @@ import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
+import fun.madeby.jumper.entity.Spawner;
 import fun.madeby.util.GdxUtils;
 import fun.madeby.util.entity.RectangularBase;
 import fun.madeby.util.utilclasses.BooleanTIntegerVHolder;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
+    private static final int COIN_PRIORITY = 5;
     private final Array<Coin> coins = new Array<>();
     private final Array<Obstacle> obstacles = new Array<>();
+    private final Array<Spawner> allSpawners = new Array<>();
     private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 14);
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
+    private final Pool<Spawner> spawningObjectPool = Pools.get(Spawner.class, 24);
     private float coinTimer;
     private float obstacleTimer;
     private float animationTime;
@@ -53,7 +57,7 @@ public class GameController {
         planet.setPosition(GameConfig.WORLD_CENTER_X,GameConfig.WORLD_CENTER_Y);
         planet.setSize(GameConfig.PLANET_RADIUS);
 
-        monster = new Monster();
+        monster = new Monster(1);
         monsterStartX = GameConfig.WORLD_CENTER_X - GameConfig.MONSTER_HALF_SIZE;
         monsterStartY = GameConfig.WORLD_CENTER_Y + GameConfig.PLANET_RADIUS;
 
@@ -108,7 +112,7 @@ public class GameController {
         }
 
 
-        // fixme obstacles are being called so quikly afterward the previously spawned is blocking the next. Attempts just stops crash
+        // fixme obstacles are being called so quickly afterward the previously spawned is blocking the next. Attempts just stops crash
         // spawns only one.
         for (int i = 1; i <= obstaclesToSpawn;) {
             float plannedSpawnAngle = monster.getCircumferencePositionInDegrees() - i * GameConfig.MIN_SEPARATION_OBJECTS - MathUtils.random(60, 80);
@@ -168,12 +172,14 @@ public class GameController {
             float plannedSpawnAngle = MathUtils.random(360);
 
             if (noPlayerOrExistingCollectableAt(plannedSpawnAngle)) {
-                Coin coin = coinPool.obtain();
+                Spawner spawner = spawningObjectPool.obtain();
+                spawner.setPriority(COIN_PRIORITY);
+                Coin coin = (Coin) spawner ;
                 coin.setAngleToDegree(plannedSpawnAngle);
                 if(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS)) {
                     coin.spawnBodyHeightAbovePlanet(); // fixme have seen this called but coin above still failing 234
                 }
-                coins.add(coin);
+                allSpawners.add(coin);
                 i++;
             }
         }
@@ -271,6 +277,7 @@ public class GameController {
     }
 
     // Janet and John's
+    // todo This is where this idea died for now, cannot just be an array of spawning objects...
     private boolean timeToSpawnCoin() {
         return coinTimer >= GameConfig.COIN_SPAWN_TIME && coins.size == 0;
     }

@@ -8,25 +8,31 @@ import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.util.entity.RectangularBase;
 
 public class Obstacle extends RectangularBase implements Pool.Poolable {
-    private float degreeOfAngle;
     private Rectangle jumpSuccessSensor;
     private float sensorDegreeOfAngle;
 
+    public Obstacle(int height) {
+        super(height);
+    }
+
+    public Obstacle() {
+        super(1);
+    }
 
 
     public void setAngleToDegree(float angle) {
-        degreeOfAngle = angle % 360;
+        super.circumferencePositionInDegrees = angle % 360;
         this.jumpSuccessSensor = new Rectangle();
 
-        sensorDegreeOfAngle = degreeOfAngle + 20f;
+        sensorDegreeOfAngle = circumferencePositionInDegrees + 20f;
 
         float radius = GameConfig.PLANET_RADIUS;
         float originX = GameConfig.WORLD_CENTER_X;
         float originY = GameConfig.WORLD_CENTER_Y;
 
         // Obstacle
-        float newX = originX + MathUtils.cosDeg(-degreeOfAngle) * radius;
-        float newY = originY + MathUtils.sinDeg(-degreeOfAngle) * radius;
+        float newX = originX + MathUtils.cosDeg(-circumferencePositionInDegrees) * radius;
+        float newY = originY + MathUtils.sinDeg(-circumferencePositionInDegrees) * radius;
         setPosition(newX, newY);
 
         // Sensor
@@ -36,8 +42,8 @@ public class Obstacle extends RectangularBase implements Pool.Poolable {
         jumpSuccessSensor.set(sensorX, sensorY, getWidthOrRadius(), getHeight());
     }
 
-    public float getDegreeOfAngle() {
-        return degreeOfAngle;
+    public float getCircumferencePositionInDegrees() {
+        return super.circumferencePositionInDegrees;
     }
 
     public float getSensorDegreeOfAngle() {

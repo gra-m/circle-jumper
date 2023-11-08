@@ -46,6 +46,12 @@ successfully above existing obstacles. Just going to take a quick look.
 Fixed the scoring decided to leave the rendering of coins until it is (possibly) completely redesigned.
 
 ## 234
-Have observed being able to move through obstacles on occasion?! Set currently so coins spawn above 
-planet surface. Flag update is being called but is not having required effect when called. This is, again
+~~Have observed being able to move through obstacles on occasion?!~~ 
+Set currently so coins spawn above planet surface. Flag update is being called but is not having required effect when called. This is, again
 a debug within a system that I'm not happy with anyway == obstacle and coin spawning.
+
+##  SpawnExperiment1 == stub
+I played around and left as stub, I like the idea of one array for all
+spawned objects, but, it is more complex than I want to commit to here.
+My priority is to finish the course and get experimental with my own
+projects.
