@@ -31,6 +31,7 @@ import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
 import fun.madeby.jumper.entity.Monster;
+import fun.madeby.jumper.screen.menu.GameOverOverlay;
 import fun.madeby.jumper.screen.menu.MenuOverlay;
 import fun.madeby.util.ViewportUtils;
 import fun.madeby.util.debug.DebugCameraController;
@@ -59,6 +60,7 @@ public class GameRenderer implements Disposable {
 
     private Stage hudStage;
     private MenuOverlay menuOverlay;
+    private GameOverOverlay gameOverOverlay;
 
     public GameRenderer(GameController gameController, AssetManager assetManager,
                         SpriteBatch spriteBatch) {
@@ -74,7 +76,7 @@ public class GameRenderer implements Disposable {
 
         hudViewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
         hudStage = new Stage(hudViewport, spriteBatch);
-        hudStage.setDebugAll(true);
+        //hudStage.setDebugAll(true); todo for menus == real help!
 
         shapeRenderer = new ShapeRenderer();
         debugCameraController = new DebugCameraController();
@@ -94,7 +96,9 @@ public class GameRenderer implements Disposable {
         Skin skin = assetManager.get(AssetDescriptors.SKIN);
 
         menuOverlay = new MenuOverlay(skin, controller.getOverlayCallback());
+        gameOverOverlay = new GameOverOverlay(skin, controller.getOverlayCallback());
         hudStage.addActor(menuOverlay);
+        hudStage.addActor(gameOverOverlay);
         Gdx.input.setInputProcessor(hudStage);
     }
 
@@ -160,6 +164,7 @@ public class GameRenderer implements Disposable {
     private void renderHud() {
         hudViewport.apply();
         menuOverlay.setVisible(false);
+        gameOverOverlay.setVisible(false);
 
         GameState gameState = controller.getGameState();
 
@@ -168,11 +173,16 @@ public class GameRenderer implements Disposable {
             spriteBatch.begin();
             drawHUD();
             spriteBatch.end();
+            return; // do not hudStage.act()/draw
         }
 
         if(gameState.isMenu() && !menuOverlay.isVisible()) {
             menuOverlay.updateLabel();
             menuOverlay.setVisible(true);
+        } else if (gameState.isGameOver() && !gameOverOverlay.isVisible()) {
+            gameOverOverlay.updateLabels();
+            gameOverOverlay.setVisible(true);
+
         }
 
         hudStage.act();
