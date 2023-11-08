@@ -45,3 +45,7 @@ Decided to take a quick look at these -> circumference should read radius regard
 successfully above existing obstacles. Just going to take a quick look.
 Fixed the scoring decided to leave the rendering of coins until it is (possibly) completely redesigned.
 
+## 234
+Have observed being able to move through obstacles on occasion?! Set currently so coins spawn above 
+planet surface. Flag update is being called but is not having required effect when called. This is, again
+a debug within a system that I'm not happy with anyway == obstacle and coin spawning.

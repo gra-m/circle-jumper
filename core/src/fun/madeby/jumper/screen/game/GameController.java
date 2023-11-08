@@ -171,7 +171,7 @@ public class GameController {
                 Coin coin = coinPool.obtain();
                 coin.setAngleToDegree(plannedSpawnAngle);
                 if(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS)) {
-                    coin.spawnBodyHeightAbovePlanet(); // fixme
+                    coin.spawnBodyHeightAbovePlanet(); // fixme have seen this called but coin above still failing 234
                 }
                 coins.add(coin);
                 i++;

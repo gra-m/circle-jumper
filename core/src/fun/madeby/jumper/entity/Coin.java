@@ -23,9 +23,12 @@ public class Coin extends RectangularBase implements Pool.Poolable {
             radius+= GameConfig.COIN_SIZE;
         }
 
+        radius += GameConfig.COIN_SIZE;
+
         float originX = GameConfig.WORLD_CENTER_X;
         float originY = GameConfig.WORLD_CENTER_Y;
 
+        // todo spawning coins above planet surface universally at present
         float newX = originX + (MathUtils.cosDeg(-circumferencePositionInDegrees) * radius);
         float newY = originY + (MathUtils.sinDeg(-circumferencePositionInDegrees) * radius);
 
@@ -43,7 +46,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     }
 
     public void spawnBodyHeightAbovePlanet() {
-        // todo have seen that this is called
+        // todo have seen that this is called, it could be that it is being called too late?
         LOG.debug("A COIN'S SPAWN RADIUS HAS BEEN ADJUSTED.");
         spawnBodyHeightAbovePlanet = true;
     }
