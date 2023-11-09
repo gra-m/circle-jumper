@@ -49,3 +49,8 @@ Fixed the scoring decided to leave the rendering of coins until it is (possibly)
 Have observed being able to move through obstacles on occasion?! Set currently so coins spawn above 
 planet surface. Flag update is being called but is not having required effect when called. This is, again
 a debug within a system that I'm not happy with anyway == obstacle and coin spawning.
+
+# GameController experimental refactor
+Aim -> GameController is a massive class, I want to extract its actions into smaller classes starting with
+SpawningController -> having all of the spawning logic in one place provides a good foundation for 
+redesigning the spawning logic altogether.

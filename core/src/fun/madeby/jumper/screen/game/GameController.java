@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
-import com.badlogic.gdx.utils.Pool;
-import com.badlogic.gdx.utils.Pools;
 
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.common.GameState;
@@ -24,12 +22,9 @@ import fun.madeby.util.utilclasses.BooleanTIntegerVHolder;
 
 public class GameController {
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
-    private final Array<Coin> coins = new Array<>();
-    private final Array<Obstacle> obstacles = new Array<>();
-    private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 14);
-    private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
-    private float coinTimer;
-    private float obstacleTimer;
+
+    private final SpawnController spawnController;
+
     private float animationTime;
     private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
     private int testLives = 1;
@@ -47,6 +42,7 @@ public class GameController {
 
 
     public GameController() {
+        this.spawnController = new SpawnController();
         init();
     }
     private void init() {
@@ -82,6 +78,7 @@ public class GameController {
 
     }
 
+    // GameController class provide what is required:
     public void update(float delta) {
 
         if (gameState.isReady() && waitBetweenGames > 0) {
@@ -317,10 +314,9 @@ public class GameController {
 
     private void collisionDetection() {
 
-        for (int i = 0; i < coins.size; i++) {
-            if(collided(coins.get(i).getBoundsThatAreUsedForCollisionDetection()))
-                coinScore(i);
-            coinTimer = 0f;
+        for (int i = 0; i < spawnController.getCoins().size; i++) {
+            if(collided(spawnController.getCoins().get(i).getBoundsThatAreUsedForCollisionDetection()))
+                spawnController.removeCoin(i);
         }
 
         for (int i = 0; i < obstacles.size; i++) {
@@ -337,11 +333,7 @@ public class GameController {
     }
 
 
-    private void coinScore(int coinCollected) {
-        Coin collected = coins.removeIndex(coinCollected);
-        coinPool.free(collected);
-        GameManager.getInstance().incrementScore(GameConfig.COIN_SCORE);
-    }
+
 
     private void lifeLost(int bashedObstacle) {
         Obstacle bashed = obstacles.removeIndex(bashedObstacle);
@@ -360,15 +352,14 @@ public class GameController {
     public void restart() {
         gameState = GameState.READY;
         animationTime = 0f;
-        coinPool.freeAll(coins);
-        coinPool.clear();
 
-        obstaclePool.freeAll(obstacles);
-        obstacles.clear();
+        spawnController.resetCoinSpawning();
+        spawnController.resetObstacleSpawning();
+
+
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
-        coinTimer = 0;
-        obstacleTimer = 0;
+
 
         GameManager.getInstance().updateHighScore();
         GameManager.getInstance().reset();
