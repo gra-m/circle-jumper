@@ -51,6 +51,16 @@ planet surface. Flag update is being called but is not having required effect wh
 a debug within a system that I'm not happy with anyway == obstacle and coin spawning.
 
 # GameController experimental refactor
-Aim -> GameController is a massive class, I want to extract its actions into smaller classes starting with
+~~Aim -> GameController is a massive class, I want to extract its actions into smaller classes starting with
 SpawningController -> having all of the spawning logic in one place provides a good foundation for 
-redesigning the spawning logic altogether.
+redesigning the spawning logic altogether.~~
+Completed, monster (the player) is passed to the Spawning controller on spawning initialization.
+This is the only interdependency. 
+GameRenderer (another monster class) still gets from GameController, so SpawnController is invisible 
+externally.
+
+My thoughts at present are possibly:
+* further separating Coin and Obstacle spawning
+* Making SpawnController a singleton (but.. why?)
+* further separating Scoring and Collision detection from Game Controller.l
+
