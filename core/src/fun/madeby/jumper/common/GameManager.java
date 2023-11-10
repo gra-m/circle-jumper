@@ -14,9 +14,11 @@ import fun.madeby.jumper.config.GameConfig;
  * https://www.digitalocean.com/community/tutorials/thread-safety-in-java-singleton-classes
  */
 public class GameManager {
+
+    private final boolean logging = false;
+    private static final Logger LOG = new Logger(GameManager.class.getName(), Logger.DEBUG);
         private static volatile GameManager gameManagerInstance;
         private static Object mutex = new Object();
-        private static final Logger LOG = new Logger(GameManager.class.getName(), Logger.DEBUG);
 
         private Preferences prefs;
         private int score;
@@ -31,7 +33,8 @@ public class GameManager {
 
         public void incrementScore(int amount){
             score += amount;
-            LOG.debug("Score just incremented: " + score + " " + highScore);
+            if (logging)
+                LOG.debug("Score just incremented: " + score + " " + highScore);
             checkAndSetNewHighScore();
         }
 
@@ -42,12 +45,15 @@ public class GameManager {
     }
 
     public void updateDisplayScores(float delta) {
+            if (logging)
             LOG.debug("score/displayed score = " + score + " " + displayedScore);
             if (score > displayedScore) {
+                if(logging)
                 LOG.debug("Calling smooth current score");
                 smoothDisplayedScores(true, score, displayedScore, delta);
             }
             if (highScore > displayedHighScore) {
+                if (logging)
                 LOG.debug("Calling smooth high score");
                 smoothDisplayedScores(false, highScore, displayedHighScore, delta);
             }
@@ -68,9 +74,11 @@ public class GameManager {
             updateDisplayValueToThis = Math.min(currentValue, currentDisplayedValue + (int) (100 * delta));
 
             if (isCurrentScore) {
+                if (logging)
                 LOG.debug("Updating displayed score to updateDisplayValueToThis");
                 displayedScore = updateDisplayValueToThis;
             } else {
+                if (logging)
                 LOG.debug("Updating high score to updateDisplayValueToThis");
                 displayedHighScore = updateDisplayValueToThis;
             }

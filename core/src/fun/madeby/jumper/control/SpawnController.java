@@ -1,16 +1,21 @@
-package fun.madeby.jumper.screen.game;
+package fun.madeby.jumper.control;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.PooledLinkedList;
 import com.badlogic.gdx.utils.Pools;
+
+import java.util.Optional;
 
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Monster;
 import fun.madeby.jumper.entity.Obstacle;
+import fun.madeby.jumper.entity.Spawnable1;
+import fun.madeby.jumper.entity.Spawnable2;
 import fun.madeby.util.GdxUtils;
 import fun.madeby.util.entity.RectangularBase;
 import fun.madeby.util.utilclasses.BooleanTIntegerVHolder;
@@ -20,8 +25,11 @@ public class SpawnController {
     private static final Logger LOG = new Logger(SpawnController.class.getName(), Logger.DEBUG);
     private final Monster monster;
 
+    private final Pool<RectangularBase> spawnablesPool = Pools.get(RectangularBase.class, 20);
+    private final Array<RectangularBase> spawnables = new Array<>();
     private final Array<Coin> coins = new Array<>();
     private final Array<Obstacle> obstacles = new Array<>();
+    private final PooledLinkedList<RectangularBase> spawnableLinkedList = new PooledLinkedList<>(20);
     private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 14);
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float obstacleTimer;
@@ -30,15 +38,64 @@ public class SpawnController {
     public SpawnController(Monster monster) {
         this.monster = monster;
     }
-    // External Calls
 
+    // Test Code
+    /**
+     * Plan ==  use replacement coin and obstacle PooledLinkedList to check for all spawnables in
+     * one list.
+     * 1. test PooledLinkedList as a coinPool replacement, call this method from spawnCoins()
+     * replacing logic.
+     * @param delta
+     */
+    public void spawnSpawnablesTest(float delta) {
+        coinTimer += delta;
+        //obstacleTimer += delta;
+
+        if(!timeToSpawnCoin())
+        {
+            return;
+        }
+        addZeroToTwoSpawnable2s();
+
+    }
+
+    private void addZeroToTwoSpawnable2s()
+    {
+        int coinsToSpawn = (int) getRandom(1, GameConfig.ACTUAL_MAX_COINS + 1);
+
+        for (int i = 0; i <= coinsToSpawn;) {
+            float plannedSpawnAngle = MathUtils.random(360);
+
+            if (noPlayerOrExistingCollectableAt(plannedSpawnAngle)) {
+                Coin coin = (Coin) spawnablesPool.obtain();
+                coin.isActive = true;
+                coin.setAngleToDegree(plannedSpawnAngle);
+                if(trueThatAnObjectClashedWith(plannedSpawnAngle, GameConfig.MIN_SEPARATION_COINS)) {
+                    coin.spawnBodyHeightAbovePlanet();
+                }
+                spawnables.add(coin);
+                i++;
+            }
+        }
+
+    }
+
+    private void retrieveInactiveCoinFromLinkedList()
+    {
+        for (int i = 0; i < spawnableLinkedList.size(); i++) {
+        }
+    }
+
+
+    // External Calls
     public void spawnCoins(float delta) {
         coinTimer += delta;
 
         if (!timeToSpawnCoin()) {
             return;
         }
-        addZeroToTwoCoins();
+        //addZeroToTwoCoins();
+        spawnSpawnablesTest(delta);
     }
 
     public void spawnObstacles(float delta) {
@@ -107,7 +164,7 @@ public class SpawnController {
         }
 
 
-        // fixme obstacles are being called so quikly afterward the previously spawned is blocking the next. Attempts just stops crash
+        // fixme obstacles are being called so quickly afterward the previously spawned is blocking the next. Attempts just stops crash
         // spawns only one.
         for (int i = 1; i <= obstaclesToSpawn;) {
             float plannedSpawnAngle = monster.getCircumferencePositionInDegrees() - i * GameConfig.MIN_SEPARATION_OBJECTS - MathUtils.random(60, 80);
@@ -165,7 +222,7 @@ public class SpawnController {
     }
 
     private boolean trueThatAnObjectClashedWith(float plannedSpawnAngle, float tolerance) {
-        Array<RectangularBase> arrayOfObstacles = new Array<RectangularBase>(obstacles);
+        Array<RectangularBase> arrayOfObstacles = new Array<>(obstacles);
         return !trueIfArrayOfGameObjectsDoesNotClashWith(plannedSpawnAngle, arrayOfObstacles,
                 tolerance );
 

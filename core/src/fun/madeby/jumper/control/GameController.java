@@ -1,4 +1,4 @@
-package fun.madeby.jumper.screen.game;
+package fun.madeby.jumper.control;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -6,24 +6,23 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
+
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.common.GameState;
 import fun.madeby.jumper.config.GameConfig;
 import fun.madeby.jumper.entity.Coin;
+import fun.madeby.jumper.entity.Monster;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;
-import fun.madeby.jumper.entity.Monster;
 import fun.madeby.jumper.screen.menu.OverlayCallback;
 
 public class GameController {
-    private boolean logging = true;
     private static final Logger LOG = new Logger(GameController.class.getName(), Logger.DEBUG);
-
+    private final boolean logging = true;
+    private final int testLives = 1;
     private SpawnController spawnController;
-
     private float animationTime;
     private float waitBetweenGames = GameConfig.PAUSE_BEFORE_RESTART;
-    private int testLives = 1;
     private int testLivesLost;
 
     private GameState gameState = GameState.MENU;
@@ -34,16 +33,20 @@ public class GameController {
     private OverlayCallback callback;
 
 
-    public GameController() {
+    public GameController()
+    {
         init();
     }
-    private void init() {
-        if (logging) {
+
+    private void init()
+    {
+        if (logging)
+        {
             LOG.debug("init Called");
         }
 
         planet = new Planet();
-        planet.setPosition(GameConfig.WORLD_CENTER_X,GameConfig.WORLD_CENTER_Y);
+        planet.setPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
         planet.setSize(GameConfig.PLANET_RADIUS);
 
         monster = new Monster();
@@ -55,40 +58,43 @@ public class GameController {
 
         initialiseSpawning();
 
-        callback =  new OverlayCallback() {
+        callback = new OverlayCallback() {
             @Override
-            public void home() {
+            public void home()
+            {
                 gameState = GameState.MENU;
 
             }
 
             @Override
-            public void ready() {
+            public void ready()
+            {
                 restart();
                 gameState = GameState.READY;
-
             }
         };
     }
 
-    /**
-     * Possible overkill but foresee initialise SpawningSingleton?
-     */
-    private void initialiseSpawning() {
+    private void initialiseSpawning()
+    {
         this.spawnController = new SpawnController(monster);
     }
 
     // GameController class provide what is required:
-    public void update(float delta) {
+    public void update(float delta)
+    {
 
-        if (gameState.isReady() && waitBetweenGames > 0) {
+        if (gameState.isReady() && waitBetweenGames > 0)
+        {
             waitBetweenGames -= delta;
-            if (waitBetweenGames <= 0) {
+            if (waitBetweenGames <= 0)
+            {
                 gameState = GameState.PLAYING;
             }
         }
 
-        if(!gameState.isPlaying()) {
+        if (!gameState.isPlaying())
+        {
             return;
         }
 
@@ -96,15 +102,18 @@ public class GameController {
 
         GameManager.getInstance().updateDisplayScores(delta);
 
-        if (jump()) {
+        if (jump())
+        {
             monster.makeStateJumping();
         }
         monster.updating(delta);
-        for (Obstacle ob : spawnController.getObstacles()) {
+        for (Obstacle ob : spawnController.getObstacles())
+        {
             ob.update(delta);
         }
 
-        for (Coin coin : spawnController.getCoins()) {
+        for (Coin coin : spawnController.getCoins())
+        {
             coin.update(delta);
         }
 
@@ -113,63 +122,72 @@ public class GameController {
         collisionDetection();
     }
 
-    private boolean jump() {
-        // todo shrink planet and have flying monster? == get rid of monster.currentlyWalking();
+    private boolean jump()
+    {
         return Gdx.input.isKeyPressed(Input.Keys.SPACE) && monster.currentlyWalking();
     }
 
-    public Planet getPlanet(){
+    public Planet getPlanet()
+    {
         return planet;
     }
 
-    public Monster getMonster() {
+    public Monster getMonster()
+    {
         return monster;
     }
 
 
+    public float getAnimationTime()
+    {
+        return animationTime;
+    }
 
-    public float getAnimationTime(){return animationTime;}
-
-    public float getWaitBetweenGames() {
+    public float getWaitBetweenGames()
+    {
         return waitBetweenGames;
     }
 
-    // Janet and John's
 
-    private void collisionDetection() {
+    private void collisionDetection()
+    {
 
-        for (int i = 0; i < spawnController.getCoins().size; i++) {
-            if(collided(spawnController.getCoins().get(i).getBoundsThatAreUsedForCollisionDetection()))
+        for (int i = 0; i < spawnController.getCoins().size; i++)
+        {
+            if (collided(spawnController.getCoins().get(i).getBoundsThatAreUsedForCollisionDetection()))
                 spawnController.removeCoin(i);
         }
 
-        for (int i = 0; i < spawnController.getObstacles().size; i++) {
-            if(collided(spawnController.getObstacles().get(i).getBoundsThatAreUsedForCollisionDetection())) {
+        for (int i = 0; i < spawnController.getObstacles().size; i++)
+        {
+            if (collided(spawnController.getObstacles().get(i).getBoundsThatAreUsedForCollisionDetection()))
+            {
                 lifeLost(i);
                 //reset();
             }
         }
 
-        for (int i = 0; i < spawnController.getObstacles().size; i++) {
-            if(collided(spawnController.getObstacles().get(i).getJumpSuccessSensor()))
+        for (int i = 0; i < spawnController.getObstacles().size; i++)
+        {
+            if (collided(spawnController.getObstacles().get(i).getJumpSuccessSensor()))
                 jumpSuccessScore(i);
         }
     }
 
-    private void lifeLost(int bashedObstacle) {
+    private void lifeLost(int bashedObstacle)
+    {
         spawnController.removeObstacle(bashedObstacle);
         decrementLives();
     }
 
-    /** todo
-     * Poss implement here or in GameManager but for now calling reset after test-lives are lost
-     */
-    private void decrementLives() {
+    private void decrementLives()
+    {
         if (testLivesLost++ >= testLives)
             gameState = GameState.GAME_OVER;
     }
 
-    public void restart() {
+    public void restart()
+    {
         gameState = GameState.READY;
         animationTime = 0f;
 
@@ -186,31 +204,38 @@ public class GameController {
 
     }
 
-    private void jumpSuccessScore(int jumpedObstacle) {
-        if (logging) {
+    private void jumpSuccessScore(int jumpedObstacle)
+    {
+        if (logging)
+        {
             LOG.debug("jumpSuccessScore");
         }
         spawnController.removeObstacle(jumpedObstacle);
     }
 
-    private boolean collided(Rectangle itemBounds) {
+    private boolean collided(Rectangle itemBounds)
+    {
         return Intersector.overlaps(monster.getBoundsThatAreUsedForCollisionDetection(), itemBounds);
     }
 
-    public OverlayCallback getOverlayCallback() {
+    public OverlayCallback getOverlayCallback()
+    {
         return callback;
     }
 
 
-    public GameState getGameState() {
+    public GameState getGameState()
+    {
         return gameState;
     }
 
-    public Array<Obstacle> getObstacles() {
+    public Array<Obstacle> getObstacles()
+    {
         return spawnController.getObstacles();
     }
 
-    public Array<Coin> getCoins() {
+    public Array<Coin> getCoins()
+    {
         return spawnController.getCoins();
     }
 }

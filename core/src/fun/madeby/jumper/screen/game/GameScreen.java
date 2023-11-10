@@ -3,6 +3,7 @@ package fun.madeby.jumper.screen.game;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
 
+import fun.madeby.jumper.control.GameController;
 import fun.madeby.util.GdxUtils;
 import fun.madeby.util.game.GameBase;
 

@@ -27,6 +27,7 @@ import fun.madeby.jumper.assetinfo.RegionNames;
 import fun.madeby.jumper.common.GameManager;
 import fun.madeby.jumper.common.GameState;
 import fun.madeby.jumper.config.GameConfig;
+import fun.madeby.jumper.control.GameController;
 import fun.madeby.jumper.entity.Coin;
 import fun.madeby.jumper.entity.Obstacle;
 import fun.madeby.jumper.entity.Planet;

@@ -11,7 +11,12 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     private static final Logger LOG = new Logger(Coin.class.getName(), Logger.DEBUG);
     private boolean spawnBodyHeightAbovePlanet;
     private float scale;
+    public int geographicSpawnPriority = 2;
+    public boolean isActive;
 
+    public Coin() {
+        isActive = true;
+    }
 
     public void update(float delta) {
         if (scale < GameConfig.COIN_SIZE) {
@@ -50,6 +55,7 @@ public class Coin extends RectangularBase implements Pool.Poolable {
     public void reset() {
         spawnBodyHeightAbovePlanet = false;
         scale = 0;
+        isActive = false;
 
     }
 

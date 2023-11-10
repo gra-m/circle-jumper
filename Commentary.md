@@ -62,5 +62,10 @@ externally.
 My thoughts at present are possibly:
 * further separating Coin and Obstacle spawning
 * Making SpawnController a singleton (but.. why?)
-* further separating Scoring and Collision detection from Game Controller.l
+* further separating Scoring and Collision detection from Game Controller.
+
+Note to self...The next day:
+I did some research and purchased a couple of second hand books, one on LibGDX the other on game
+patterns. So Instead of refactoring in a way that will probably turn out to be sub-optimal, I'm moving
+on to the next larger game example and stubbing this branch for now.
 
